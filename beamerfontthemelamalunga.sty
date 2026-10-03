@@ -1,0 +1,227 @@
+%% beamerfontthemelamalunga.sty
+%% Lamalunga font theme: one family, sizes on a modular scale.
+%%
+%% Copyright (C) 2026 Donato Meoli
+%%
+%% This work may be distributed and/or modified under the conditions of the
+%% LaTeX Project Public License, either version 1.3c of this license or (at
+%% your option) any later version. The latest version of this license is in
+%%   https://www.latex-project.org/lppl.txt
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% The Current Maintainer of this work is Donato Meoli.
+\NeedsTeXFormat{LaTeX2e}[2022/06/01]
+\ProvidesExplPackage{beamerfontthemelamalunga}{2026/10/03}{0.1.0}
+  {Lamalunga font theme}
+
+\RequirePackage{lamalunga}
+
+% ---------------------------------------------------------------------------
+% Families. Each one comes with the mathematics that belongs to it (math =
+% auto), a mono family shared by all (IBM Plex Mono) and a display series
+% for the large sizes: the light weight where the family has one.
+%   plex        IBM Plex Sans: technical and warm, the default
+%   source      Source Sans: humanist, quiet (nordic, japandi)
+%   heros       TeX Gyre Heros: the grotesque of the Swiss style
+%   adventor    TeX Gyre Adventor: geometric, after the Bauhaus
+%   garamond    EB Garamond: the Renaissance book face (classical)
+%   libertinus  Libertinus Serif: a serif for mathematics-heavy talks
+% ---------------------------------------------------------------------------
+
+\bool_new:N \g__lamalunga_unicode_bool
+\bool_lazy_or:nnT { \sys_if_engine_luatex_p: } { \sys_if_engine_xetex_p: }
+  { \bool_gset_true:N \g__lamalunga_unicode_bool }
+\tl_new:N \g__lamalunga_display_series_tl
+\tl_gset:Nn \g__lamalunga_display_series_tl { m }
+\tl_new:N \g__lamalunga_math_font_tl
+\tl_gset:Nn \g__lamalunga_math_font_tl { FiraMath-Regular.otf }
+
+\cs_new_protected:Npn \__lamalunga_mono:
+  {
+    \bool_if:NTF \g__lamalunga_unicode_bool
+      {
+        \setmonofont { IBMPlexMono }
+          [
+            Extension = .otf , UprightFont = *-Regular , ItalicFont = *-Italic ,
+            BoldFont = *-SemiBold , BoldItalicFont = *-SemiBoldItalic ,
+            Scale = MatchLowercase ,
+          ]
+      }
+      { \RequirePackage [ scale = 0.94 ] { plex-mono } }
+  }
+
+\bool_if:NF \g__lamalunga_unicode_bool
+  { \RequirePackage [ T1 ] { fontenc } }
+\bool_if:NT \g__lamalunga_unicode_bool
+  { \RequirePackage { fontspec } }
+
+\str_case:Vn \g_lamalunga_font_tl
+  {
+    { plex }
+      {
+        \tl_gset:Nn \g__lamalunga_display_series_tl { l }
+        \bool_if:NTF \g__lamalunga_unicode_bool
+          {
+            \setsansfont { IBMPlexSans }
+              [
+                Extension = .otf , UprightFont = *-Regular ,
+                ItalicFont = *-Italic , BoldFont = *-SemiBold ,
+                BoldItalicFont = *-SemiBoldItalic ,
+                FontFace = { l } { n } { *-Light } ,
+                FontFace = { l } { it } { *-LightItalic } ,
+                Numbers = { Lining , Tabular } ,
+              ]
+          }
+          { \RequirePackage { plex-sans } }
+        \__lamalunga_mono:
+      }
+    { source }
+      {
+        \tl_gset:Nn \g__lamalunga_display_series_tl { l }
+        \bool_if:NTF \g__lamalunga_unicode_bool
+          {
+            \setsansfont { SourceSansPro }
+              [
+                Extension = .otf , UprightFont = *-Regular ,
+                ItalicFont = *-RegularIt , BoldFont = *-Semibold ,
+                BoldItalicFont = *-SemiboldIt ,
+                FontFace = { l } { n } { *-Light } ,
+                FontFace = { l } { it } { *-LightIt } ,
+              ]
+          }
+          { \RequirePackage [ semibold ] { sourcesanspro } }
+        \__lamalunga_mono:
+      }
+    { heros }
+      {
+        \bool_if:NTF \g__lamalunga_unicode_bool
+          {
+            \setsansfont { texgyreheros }
+              [
+                Extension = .otf , UprightFont = *-regular ,
+                ItalicFont = *-italic , BoldFont = *-bold ,
+                BoldItalicFont = *-bolditalic ,
+              ]
+          }
+          { \RequirePackage { tgheros } }
+        \__lamalunga_mono:
+      }
+    { adventor }
+      {
+        \bool_if:NTF \g__lamalunga_unicode_bool
+          {
+            \setsansfont { texgyreadventor }
+              [
+                Extension = .otf , UprightFont = *-regular ,
+                ItalicFont = *-italic , BoldFont = *-bold ,
+                BoldItalicFont = *-bolditalic ,
+              ]
+          }
+          { \RequirePackage { tgadventor } }
+        \__lamalunga_mono:
+      }
+    { garamond }
+      {
+        \tl_gset:Nn \g__lamalunga_math_font_tl { Garamond-Math.otf }
+        \bool_if:NTF \g__lamalunga_unicode_bool
+          {
+            \setmainfont { EBGaramond }
+              [
+                Extension = .otf , UprightFont = *-Regular ,
+                ItalicFont = *-Italic , BoldFont = *-SemiBold ,
+                BoldItalicFont = *-SemiBoldItalic ,
+                Numbers = { OldStyle , Proportional } ,
+              ]
+          }
+          { \RequirePackage { ebgaramond } }
+        \__lamalunga_mono:
+        \usefonttheme { serif }
+      }
+    { libertinus }
+      {
+        \tl_gset:Nn \g__lamalunga_math_font_tl { LibertinusMath-Regular.otf }
+        \bool_if:NTF \g__lamalunga_unicode_bool
+          {
+            \setmainfont { LibertinusSerif }
+              [
+                Extension = .otf , UprightFont = *-Regular ,
+                ItalicFont = *-Italic , BoldFont = *-Semibold ,
+                BoldItalicFont = *-SemiboldItalic ,
+              ]
+          }
+          { \RequirePackage { libertinus } }
+        \__lamalunga_mono:
+        \usefonttheme { serif }
+      }
+  }
+
+\str_if_eq:VnT \g_lamalunga_math_tl { fira }
+  { \tl_gset:Nn \g__lamalunga_math_font_tl { FiraMath-Regular.otf } }
+\bool_lazy_and:nnT
+  { \g__lamalunga_unicode_bool }
+  { ! \str_if_eq_p:Vn \g_lamalunga_math_tl { default } }
+  {
+    \str_if_eq:VnF \g_lamalunga_font_tl { none }
+      {
+        \usefonttheme { professionalfonts }
+        \RequirePackage { unicode-math }
+        \exp_args:NV \setmathfont \g__lamalunga_math_font_tl
+      }
+  }
+
+% Optical margin alignment and, for all-capitals, letterspacing
+\RequirePackage [ protrusion = true , tracking = true ] { microtype }
+\NewDocumentCommand \lamalungacaps { m }
+  { \textls [ 80 ] { \MakeUppercase {#1} } }
+\NewDocumentCommand \lamalungalight { }
+  { \exp_args:NV \fontseries \g__lamalunga_display_series_tl \selectfont }
+
+% ---------------------------------------------------------------------------
+% Leading: the body leading of the scale, applied to every size
+% ---------------------------------------------------------------------------
+
+\linespread
+  {
+    \fp_eval:n
+      { round( \f@size * \g_lamalunga_leading_fp / \dim_to_decimal:n { \f@baselineskip } , 4 ) }
+  }
+\selectfont
+
+% ---------------------------------------------------------------------------
+% Sizes: base * ratio^k, with half steps (k + 1/2) for small print
+% ---------------------------------------------------------------------------
+
+\cs_new_protected:Npn \lamalunga@fonts
+  {
+    \setbeamerfont { title }
+      { size = \modularsize { 2 } , series = \lamalungalight }
+    \setbeamerfont { subtitle }
+      { size = \modularsize { 1 } , series = \lamalungalight }
+    \setbeamerfont { author } { size = \modularsize { 0 } }
+    \setbeamerfont { institute } { size = \modularsize { -0.5 } }
+    \setbeamerfont { date } { size = \modularsize { -0.5 } }
+    \setbeamerfont { titlegraphic } { size = \modularsize { -0.5 } }
+
+    \setbeamerfont { frametitle }
+      { size = \modularsize { 1 } , series = \mdseries }
+    \setbeamerfont { framesubtitle } { size = \modularsize { 0 } }
+    \setbeamerfont { section~title }
+      { size = \modularsize { 2 } , series = \lamalungalight }
+    \setbeamerfont { section~number } { size = \modularsize { 0 } }
+    \setbeamerfont { standout }
+      { size = \modularsize { 2 } , series = \lamalungalight }
+
+    \setbeamerfont { block~title } { size = \modularsize { 0 } , series = \bfseries }
+    \setbeamerfont { footline } { size = \modularsize { -0.5 } }
+    \setbeamerfont { headline } { size = \modularsize { -0.5 } }
+    \setbeamerfont { caption } { size = \modularsize { -0.5 } }
+    \setbeamerfont { footnote } { size = \modularsize { -0.5 } }
+    \setbeamerfont { section~in~toc } { size = \modularsize { 0 } }
+    \setbeamerfont { subsection~in~toc } { size = \modularsize { -0.5 } }
+    \setbeamerfont { itemize/enumerate~subbody } { size = \modularsize { -0.5 } }
+    \setbeamerfont { itemize/enumerate~subsubbody } { size = \modularsize { -0.5 } }
+    \setbeamerfont { bibliography~item } { size = \modularsize { -0.5 } }
+  }
+\lamalunga@fonts
+
+\endinput

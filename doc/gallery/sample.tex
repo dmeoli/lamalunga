@@ -1,0 +1,109 @@
+% The sample deck behind the images of the README. It is compiled once per
+% set of options, keeping only the frames named in \galleryframes:
+%   lualatex "\def\galleryoptions{style=bauhaus}\def\galleryframes{title}\input{sample}"
+\documentclass[11pt]{beamer}
+\providecommand\galleryoptions{}
+\providecommand\galleryframes{title,section,content,standout}
+\edef\next{\noexpand\usetheme[sectionpage=none,\galleryoptions]{lamalunga}}\next
+\edef\next{\noexpand\includeonlyframes{\galleryframes}}\next
+
+\title{Proportion and Color}
+\subtitle{Sample of the Lamalunga theme}
+\author{Ada Lovelace}
+\institute{Analytical Engine Society}
+\date{10 December 1843}
+
+\newcommand\swatch[2]{%
+  \begin{tikzpicture}[baseline=(s.base)]
+    \fill[#1] (0,0) rectangle (1.618,1);
+    \draw[lamalunga-primary-t6, line width=\lamalungahairline] (0,0) rectangle (1.618,1);
+    \convertcolorspec{named}{#1}{HTML}\swatchhex
+    \node[anchor=north west, inner sep=0pt, align=left,
+      font=\modularsize{-0.5}] (s) at (0,-0.12)
+      {#2\\[-1pt]{\ttfamily\color{lamalunga-muted}\#\swatchhex}};
+  \end{tikzpicture}}
+
+\begin{document}
+
+\begin{frame}[plain,golden,label=title]
+  \titlepage
+\end{frame}
+
+\section{Harmony}
+
+\begin{frame}[golden,label=section]
+  \sectionpage
+\end{frame}
+
+\begin{frame}[label=content]{One color, and the rest follows}
+  \begin{goldencolumns}
+    \begin{itemize}
+      \item the \alert{accent} is computed
+      \begin{itemize}
+        \item from the primary
+        \begin{itemize}
+          \item on the painter's wheel
+        \end{itemize}
+      \end{itemize}
+      \item words can be \highlight{highlighted}
+    \end{itemize}
+    \nextcolumn
+    \begin{block}{Block}
+      Golden tints.
+    \end{block}
+    \begin{alertblock}{Alert}
+      The accent.
+    \end{alertblock}
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}[label=palette]{The palette}
+  \swatch{lamalunga-seed}{primary}\hfill
+  \swatch{lamalunga-a1}{harmony 1}\hfill
+  \swatch{lamalunga-a2}{harmony 2}\hfill
+  \swatch{lamalunga-accent}{accent, 4.5:1}\hfill
+  \swatch{lamalunga-ink}{ink}
+  \fibskip{8}
+  \foreach \k in {1,...,7}{\swatch{lamalunga-primary-t\k}{t\k}\hfill}%
+  \swatch{lamalunga-primary-t8}{t8}
+\end{frame}
+
+\begin{frame}[label=blocks]{Blocks}
+  \begin{goldencolumns}[minor]
+    \begin{itemize}
+      \item block
+      \item alert block
+      \item example block
+    \end{itemize}
+    \nextcolumn
+    \begin{block}{Block}
+      The primary, in golden tints.
+    \end{block}
+    \begin{alertblock}{Alert}
+      The first accent.
+    \end{alertblock}
+    \begin{exampleblock}{Example}
+      The second accent.
+    \end{exampleblock}
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}[label=image]{A golden image}
+  \begin{goldencolumns}
+    \goldenimage{example-image-a}
+    \nextcolumn
+    The picture covers a golden rectangle, whatever its own shape, and what
+    exceeds it is cropped.
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}[label=plain]{Composition}
+  The guides divide the page in thirds and at the golden section.
+  \focalpoint{se}{\tikz\fill[lamalunga-accent-vivid] circle (3pt);}
+\end{frame}
+
+\begin{frame}[standout,label=standout]
+  Less, but better.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,210 @@
+%% beamerthemelamalunga.sty
+%% Lamalunga: a beamer theme built on golden proportions and computed
+%% color harmonies.
+%%
+%% Copyright (C) 2026 Donato Meoli
+%%
+%% This work may be distributed and/or modified under the conditions of the
+%% LaTeX Project Public License, either version 1.3c of this license or (at
+%% your option) any later version. The latest version of this license is in
+%%   https://www.latex-project.org/lppl.txt
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% The Current Maintainer of this work is Donato Meoli.
+\NeedsTeXFormat{LaTeX2e}[2022/06/01]
+\ProvidesExplPackage{beamerthemelamalunga}{2026/10/03}{0.1.0}
+  {Lamalunga beamer theme}
+
+\RequirePackage{lamalunga}
+\RequirePackage{etoolbox}
+
+% ---------------------------------------------------------------------------
+% Options (all of them can be changed later with \lamalungaset, except the
+% ones marked "preamble", which shape the page)
+% ---------------------------------------------------------------------------
+
+\tl_new:N \g_lamalunga_primary_tl
+\tl_new:N \g_lamalunga_harmony_tl
+\tl_new:N \g_lamalunga_mode_tl
+\tl_new:N \g_lamalunga_canvas_tl
+\tl_new:N \g_lamalunga_aspect_tl
+\tl_new:N \g_lamalunga_margins_tl
+\tl_new:N \g_lamalunga_progressbar_tl
+\tl_new:N \g_lamalunga_numbering_tl
+\tl_new:N \g_lamalunga_headline_tl
+\tl_new:N \g_lamalunga_footline_tl
+\tl_new:N \g_lamalunga_sectionpage_tl
+\tl_new:N \g_lamalunga_blocks_tl
+\tl_new:N \g_lamalunga_guides_tl
+\tl_new:N \g_lamalunga_font_tl
+\tl_new:N \g_lamalunga_math_tl
+\tl_new:N \g_lamalunga_titles_tl
+\tl_new:N \g_lamalunga_alerts_tl
+\tl_new:N \g_lamalunga_bullets_tl
+\tl_new:N \g_lamalunga_contrast_tl
+\tl_new:N \g_lamalunga_style_tl
+\bool_new:N \g_lamalunga_spiral_bool
+
+\tl_gset:Nn \g_lamalunga_primary_tl { 7A52C0 }
+\tl_gset:Nn \g_lamalunga_harmony_tl { complementary }
+\tl_gset:Nn \g_lamalunga_mode_tl { light }
+\tl_gset:Nn \g_lamalunga_canvas_tl { tinted }
+\tl_gset:Nn \g_lamalunga_aspect_tl { golden }
+\tl_gset:Nn \g_lamalunga_margins_tl { normal }
+\tl_gset:Nn \g_lamalunga_progressbar_tl { frametitle }
+\tl_gset:Nn \g_lamalunga_numbering_tl { fraction }
+\tl_gset:Nn \g_lamalunga_headline_tl { none }
+\tl_gset:Nn \g_lamalunga_footline_tl { minimal }
+\tl_gset:Nn \g_lamalunga_sectionpage_tl { progressbar }
+\tl_gset:Nn \g_lamalunga_blocks_tl { tinted }
+\tl_gset:Nn \g_lamalunga_guides_tl { none }
+\tl_gset:Nn \g_lamalunga_font_tl { plex }
+\tl_gset:Nn \g_lamalunga_math_tl { auto }
+\tl_gset:Nn \g_lamalunga_titles_tl { plain }
+\tl_gset:Nn \g_lamalunga_alerts_tl { color }
+\tl_gset:Nn \g_lamalunga_bullets_tl { golden }
+\tl_gset:Nn \g_lamalunga_contrast_tl { AA }
+\tl_gset:Nn \g_lamalunga_style_tl { lamalunga }
+\bool_gset_true:N \g_lamalunga_spiral_bool
+
+\cs_new_protected:Npn \__lamalunga_choice:nn #1 #2
+  {
+    \keys_define:nn { lamalunga }
+      {
+        #1 .choices:nn = {#2}
+          { \tl_gset:cx { g_lamalunga_ #1 _tl } { \l_keys_choice_tl } }
+      }
+  }
+\keys_define:nn { lamalunga }
+  {
+    primary .tl_gset:N = \g_lamalunga_primary_tl ,
+    spiral .bool_gset:N = \g_lamalunga_spiral_bool ,
+  }
+\__lamalunga_choice:nn { harmony }
+  { complementary , split , triadic , analogous , tetradic , monochromatic }
+\__lamalunga_choice:nn { mode } { light , dark , paper }
+\__lamalunga_choice:nn { canvas } { tinted , white }
+\__lamalunga_choice:nn { contrast } { AA , AAA }
+\__lamalunga_choice:nn { aspect } { golden , sqrt2 , beamer }       % preamble
+\__lamalunga_choice:nn { margins } { narrow , normal , wide }        % preamble
+\__lamalunga_choice:nn { progressbar } { frametitle , head , foot , none }
+\__lamalunga_choice:nn { numbering } { fraction , counter , none }
+\__lamalunga_choice:nn { headline } { none , miniframes }           % preamble
+\__lamalunga_choice:nn { footline } { minimal , infolines , none }
+\__lamalunga_choice:nn { sectionpage } { progressbar , toc , none }
+\__lamalunga_choice:nn { blocks } { tinted , rule }
+\__lamalunga_choice:nn { guides } { none , thirds , golden , both }
+\__lamalunga_choice:nn { titles } { plain , boxed }
+\__lamalunga_choice:nn { alerts } { color , boxed }
+\__lamalunga_choice:nn { bullets } { golden , bauhaus }
+\__lamalunga_choice:nn { font }                                     % preamble
+  { plex , source , heros , adventor , garamond , libertinus , none }
+\__lamalunga_choice:nn { math } { auto , fira , default }           % preamble
+
+% Styles: one choice, and font, harmony, forms and mode follow from it, as
+% a style of interior design does for a room. A style sets defaults only;
+% options written after it override them.
+\keys_define:nn { lamalunga }
+  {
+    style .choice: ,
+    style / lamalunga .code:n =
+      \keys_set:nn { lamalunga }
+        {
+          primary = 7A52C0 , font = plex , harmony = complementary ,
+          mode = light , canvas = tinted , titles = plain , alerts = color ,
+          bullets = golden , corners = square , blocks = tinted ,
+          margins = normal , spiral = true
+        } ,
+    style / bauhaus .code:n =
+      \keys_set:nn { lamalunga }
+        {
+          primary = BE1E2D , font = adventor , harmony = triadic ,
+          mode = light , canvas = white , titles = boxed , alerts = boxed ,
+          bullets = bauhaus , corners = square , blocks = rule ,
+          margins = normal , spiral = false
+        } ,
+    style / swiss .code:n =
+      \keys_set:nn { lamalunga }
+        {
+          primary = D52B1E , font = heros , harmony = monochromatic ,
+          mode = light , canvas = white , titles = plain , alerts = color ,
+          bullets = golden , corners = square , blocks = rule ,
+          margins = narrow , spiral = false
+        } ,
+    style / nordic .code:n =
+      \keys_set:nn { lamalunga }
+        {
+          primary = 4F6D7A , font = source , harmony = analogous ,
+          mode = paper , canvas = tinted , titles = plain , alerts = color ,
+          bullets = golden , corners = rounded , blocks = tinted ,
+          margins = normal , spiral = false
+        } ,
+    style / classical .code:n =
+      \keys_set:nn { lamalunga }
+        {
+          primary = 7A1F2B , font = garamond , harmony = complementary ,
+          mode = paper , canvas = tinted , titles = plain , alerts = color ,
+          bullets = golden , corners = square , blocks = rule ,
+          margins = wide , spiral = true
+        } ,
+    style / japandi .code:n =
+      \keys_set:nn { lamalunga }
+        {
+          primary = 6B705C , font = source , harmony = monochromatic ,
+          mode = paper , canvas = tinted , titles = plain , alerts = color ,
+          bullets = golden , corners = rounded , blocks = rule ,
+          margins = wide , spiral = false
+        } ,
+  }
+
+\ProcessKeyOptions [ lamalunga ]
+
+% ---------------------------------------------------------------------------
+% Page: a golden page, and margins in the golden ratio, so that the text
+% block is a golden rectangle too (W - 2 phi m) / (H - 2 m) = phi
+% ---------------------------------------------------------------------------
+
+\str_case:Vn \g_lamalunga_aspect_tl
+  {
+    { golden }
+      {
+        \geometry
+          { papersize = { \fp_eval:n { round( 100 * \c_lamalunga_phi_fp , 2 ) } mm , 100mm } }
+      }
+    % the root-two rectangle of the A paper sizes: halved, it keeps its shape
+    { sqrt2 }
+      {
+        \geometry
+          { papersize = { \fp_eval:n { round( 100 * sqrt(2) , 2 ) } mm , 100mm } }
+      }
+  }
+
+\dim_new:N \lamalungahmargin
+\dim_new:N \lamalungavmargin
+\str_case:Vn \g_lamalunga_margins_tl
+  {
+    { narrow } { \dim_gset:Nn \lamalungavmargin { \fib {7} pt } }
+    { normal } { \dim_gset:Nn \lamalungavmargin { \fib {8} pt } }
+    { wide }   { \dim_gset:Nn \lamalungavmargin { \fib {9} pt } }
+  }
+\dim_gset:Nn \lamalungahmargin
+  { \fp_eval:n { round( \c_lamalunga_phi_fp * \dim_to_decimal:n { \lamalungavmargin } ) } pt }
+
+% ---------------------------------------------------------------------------
+% Sub-themes
+% ---------------------------------------------------------------------------
+
+\usefonttheme { lamalunga }
+\usecolortheme { lamalunga }
+\useoutertheme { lamalunga }
+\useinnertheme { lamalunga }
+
+\setbeamertemplate { navigation~symbols } { }
+
+\cs_gset_protected:Npn \lamalunga_after_set:
+  {
+    \lamalunga@colors
+    \lamalunga@templates
+  }
+
+\endinput

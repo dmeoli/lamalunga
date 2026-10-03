@@ -1,0 +1,292 @@
+%% beamercolorthemelamalunga.sty
+%% Lamalunga color theme: every color is computed from one primary color.
+%%
+%% Copyright (C) 2026 Donato Meoli
+%%
+%% This work may be distributed and/or modified under the conditions of the
+%% LaTeX Project Public License, either version 1.3c of this license or (at
+%% your option) any later version. The latest version of this license is in
+%%   https://www.latex-project.org/lppl.txt
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% The Current Maintainer of this work is Donato Meoli.
+\NeedsTeXFormat{LaTeX2e}[2022/06/01]
+\ProvidesExplPackage{beamercolorthemelamalunga}{2026/10/03}{0.1.0}
+  {Lamalunga color theme}
+
+\RequirePackage{lamalunga}
+
+% The palette, in the proportions of the 60-30-10 rule:
+%   60  lamalunga-canvas   the dominant: background, a breath of the primary
+%   30  lamalunga-primary  structure: titles, items, the progress track
+%   10  lamalunga-accent   the accent: alerts and the progress itself,
+%       lamalunga-accent2  rotated from the primary by the chosen harmony
+% plus lamalunga-ink (text, a shade of the primary, never pure black) and
+% lamalunga-muted (secondary text). Text colors are moved in lightness
+% until they reach 4.5:1 against the canvas; the vivid accents used for
+% graphics only until 3:1.
+
+% golden tints of a color towards the canvas: <name>-t1 ... <name>-t8,
+% <name>-tk being phi^{-k} of the color
+\cs_new_protected:Npn \__lamalunga_tints:n #1
+  {
+    \int_step_inline:nnn { 1 } { 8 }
+      {
+        \colorlet { #1-t ##1 }
+          {
+            #1 ! \fp_eval:n { round( 100 * \c_lamalunga_phi_fp ^ (-##1) , 2 ) }
+            ! lamalunga-canvas
+          }
+      }
+  }
+\cs_new:Npn \__lamalunga_pct:n #1
+  { \fp_eval:n { round( 100 * \c_lamalunga_phi_fp ^ (-(#1)) , 2 ) } }
+
+\tl_new:N \l__lamalunga_text_target_tl
+\tl_new:N \l__lamalunga_graphic_target_tl
+\cs_new_protected:Npn \lamalunga@colors
+  {
+    \exp_args:Nnnx \definecolor { lamalunga-seed } { HTML }
+      { \g_lamalunga_primary_tl }
+    \colorharmony { lamalunga } { lamalunga-seed }
+    \str_case:Vn \g_lamalunga_harmony_tl
+      {
+        { complementary }
+          {
+            \colorlet { lamalunga-a1 } { lamalunga-complement }
+            \colorlet { lamalunga-a2 } { lamalunga-analog-a }
+          }
+        { split }
+          {
+            \colorlet { lamalunga-a1 } { lamalunga-split-a }
+            \colorlet { lamalunga-a2 } { lamalunga-split-b }
+          }
+        { triadic }
+          {
+            \colorlet { lamalunga-a1 } { lamalunga-triad-a }
+            \colorlet { lamalunga-a2 } { lamalunga-triad-b }
+          }
+        { analogous }
+          {
+            \colorlet { lamalunga-a1 } { lamalunga-analog-a }
+            \colorlet { lamalunga-a2 } { lamalunga-analog-b }
+          }
+        { tetradic }
+          {
+            \colorlet { lamalunga-a1 } { lamalunga-tetrad-b }
+            \colorlet { lamalunga-a2 } { lamalunga-tetrad-a }
+          }
+        % tone on tone: one hue, the accents are its golden shade and tint
+        { monochromatic }
+          {
+            \colorlet { lamalunga-a1 }
+              { lamalunga-seed ! \__lamalunga_pct:n { 1 } ! black }
+            \colorlet { lamalunga-a2 }
+              { lamalunga-seed ! \__lamalunga_pct:n { 1 } ! white }
+          }
+      }
+    \str_if_eq:VnTF \g_lamalunga_contrast_tl { AAA }
+      {
+        \tl_set:Nn \l__lamalunga_text_target_tl { 7 }
+        \tl_set:Nn \l__lamalunga_graphic_target_tl { 4.5 }
+      }
+      {
+        \tl_set:Nn \l__lamalunga_text_target_tl { 4.5 }
+        \tl_set:Nn \l__lamalunga_graphic_target_tl { 3 }
+      }
+    \str_if_eq:VnTF \g_lamalunga_mode_tl { dark }
+      {
+        \str_if_eq:VnTF \g_lamalunga_canvas_tl { white }
+          { \colorlet { lamalunga-canvas } { black } }
+          {
+            \colorlet { lamalunga-canvas }
+              { lamalunga-seed ! \__lamalunga_pct:n { 4 } ! black }
+          }
+        \colorlet { lamalunga-ink }
+          { lamalunga-seed ! \__lamalunga_pct:n { 5 } ! white }
+      }
+      {
+        \str_if_eq:VnTF \g_lamalunga_mode_tl { paper }
+          {
+            % ivory: white warmed towards ochre, then veiled by the primary,
+            % the warm neutral on which a strong color rests in a room
+            \definecolor { lamalunga-ochre } { HTML } { C8A165 }
+            \colorlet { lamalunga-canvas }
+              {
+                lamalunga-seed ! \__lamalunga_pct:n { 9 } !
+                  lamalunga-ochre ! \__lamalunga_pct:n { 5 } ! white
+              }
+          }
+          {
+            \str_if_eq:VnTF \g_lamalunga_canvas_tl { white }
+              { \colorlet { lamalunga-canvas } { white } }
+              {
+                \colorlet { lamalunga-canvas }
+                  { lamalunga-seed ! \__lamalunga_pct:n { 8 } ! white }
+              }
+          }
+        \colorlet { lamalunga-ink }
+          { lamalunga-seed ! \__lamalunga_pct:n { 3 } ! black }
+      }
+    \ensurecontrast [ \l__lamalunga_text_target_tl ]
+      { lamalunga-primary } { lamalunga-seed } { lamalunga-canvas }
+    \ensurecontrast [ \l__lamalunga_text_target_tl ]
+      { lamalunga-accent } { lamalunga-a1 } { lamalunga-canvas }
+    \ensurecontrast [ \l__lamalunga_text_target_tl ]
+      { lamalunga-accent2 } { lamalunga-a2 } { lamalunga-canvas }
+    \ensurecontrast [ \l__lamalunga_graphic_target_tl ]
+      { lamalunga-accent-vivid } { lamalunga-a1 } { lamalunga-canvas }
+    \ensurecontrast [ \l__lamalunga_text_target_tl ] { lamalunga-muted }
+      { lamalunga-ink ! \__lamalunga_pct:n { 1 } ! lamalunga-canvas }
+      { lamalunga-canvas }
+    \__lamalunga_tints:n { lamalunga-primary }
+    \__lamalunga_tints:n { lamalunga-accent }
+    \__lamalunga_tints:n { lamalunga-accent2 }
+    \__lamalunga_tints:n { lamalunga-accent-vivid }
+    \__lamalunga_tints:n { lamalunga-ink }
+    \readableon { lamalunga-on-primary } { lamalunga-primary }
+      { lamalunga-ink } { lamalunga-seed ! \__lamalunga_pct:n { 6 } ! white }
+    \colorlet { highlight } { lamalunga-a1 }
+    \tl_gset:Nn \g_lamalunga_dark_ink_tl { lamalunga-ink }
+    \tl_gset:Nn \g_lamalunga_light_ink_tl
+      { lamalunga-seed ! \__lamalunga_pct:n { 6 } ! white }
+    \str_if_eq:VnT \g_lamalunga_mode_tl { dark }
+      { \tl_gset:Nn \g_lamalunga_dark_ink_tl { lamalunga-canvas } }
+    \exp_args:NnnVV \readableon { lamalunga-on-highlight } { highlight }
+      \g_lamalunga_dark_ink_tl \g_lamalunga_light_ink_tl
+    \lamalunga@beamercolors
+  }
+
+\cs_new_protected:Npn \lamalunga@beamercolors
+  {
+    \setbeamercolor { normal~text } { fg = lamalunga-ink , bg = lamalunga-canvas }
+    \setbeamercolor { background~canvas } { bg = lamalunga-canvas }
+    \setbeamercolor { structure } { fg = lamalunga-primary }
+    \setbeamercolor { alerted~text } { fg = lamalunga-accent }
+    \setbeamercolor { example~text } { fg = lamalunga-accent2 }
+
+    \setbeamercolor { palette~primary }
+      { fg = lamalunga-primary , bg = lamalunga-canvas }
+    \setbeamercolor { palette~secondary }
+      { fg = lamalunga-ink , bg = lamalunga-canvas }
+    \setbeamercolor { palette~tertiary }
+      { fg = lamalunga-muted , bg = lamalunga-canvas }
+    \setbeamercolor { palette~quaternary }
+      { fg = lamalunga-accent , bg = lamalunga-canvas }
+
+    \setbeamercolor { title } { fg = lamalunga-ink }
+    \setbeamercolor { subtitle } { fg = lamalunga-primary }
+    \setbeamercolor { author } { fg = lamalunga-ink }
+    \setbeamercolor { institute } { fg = lamalunga-muted }
+    \setbeamercolor { date } { fg = lamalunga-muted }
+    \setbeamercolor { titlegraphic } { fg = lamalunga-ink }
+    \setbeamercolor { title~rule } { fg = lamalunga-accent-vivid }
+    \setbeamercolor { spiral } { fg = lamalunga-primary-t3 , bg = lamalunga-primary-t6 }
+
+    \setbeamercolor { frametitle } { fg = lamalunga-primary }
+    \setbeamercolor { framesubtitle } { fg = lamalunga-muted }
+    \setbeamercolor { section~title } { fg = lamalunga-ink }
+    \setbeamercolor { section~number } { fg = lamalunga-accent }
+    \setbeamercolor { progress~bar }
+      { fg = lamalunga-accent-vivid , bg = lamalunga-primary-t5 }
+
+    \setbeamercolor { footline } { fg = lamalunga-muted }
+    \setbeamercolor { page~number~in~head/foot } { fg = lamalunga-muted }
+    \setbeamercolor { section~in~head/foot } { fg = lamalunga-primary }
+    \setbeamercolor { subsection~in~head/foot } { fg = lamalunga-muted }
+    \setbeamercolor { mini~frame } { fg = lamalunga-primary }
+    \setbeamercolor { headline } { fg = lamalunga-muted }
+
+    \setbeamercolor { standout }
+      { fg = lamalunga-on-primary , bg = lamalunga-primary }
+    \setbeamercolor { guides } { fg = lamalunga-accent-vivid }
+
+    \setbeamercolor { item } { fg = lamalunga-primary }
+    \setbeamercolor { subitem } { fg = lamalunga-primary-t1 }
+    \setbeamercolor { subsubitem } { fg = lamalunga-muted }
+    \setbeamercolor { caption~name } { fg = lamalunga-primary }
+    \setbeamercolor { footnote } { fg = lamalunga-muted }
+    \setbeamercolor { footnote~mark } { fg = lamalunga-primary }
+    \setbeamercolor { section~in~toc } { fg = lamalunga-ink }
+    \setbeamercolor { section~number~projected } { fg = lamalunga-primary , bg = lamalunga-canvas }
+    \setbeamercolor { subsection~in~toc } { fg = lamalunga-muted }
+
+    \setbeamercolor { bibliography~item } { fg = lamalunga-primary }
+    \setbeamercolor { bibliography~entry~author } { fg = lamalunga-ink }
+    \setbeamercolor { bibliography~entry~title } { fg = lamalunga-ink }
+    \setbeamercolor { bibliography~entry~location } { fg = lamalunga-muted }
+    \setbeamercolor { bibliography~entry~note } { fg = lamalunga-muted }
+
+    \str_if_eq:VnTF \g_lamalunga_blocks_tl { rule }
+      {
+        \setbeamercolor { block~title } { fg = lamalunga-primary , bg = }
+        \setbeamercolor { block~body } { fg = lamalunga-ink , bg = }
+        \setbeamercolor { block~title~alerted } { fg = lamalunga-accent , bg = }
+        \setbeamercolor { block~body~alerted } { fg = lamalunga-ink , bg = }
+        \setbeamercolor { block~title~example } { fg = lamalunga-accent2 , bg = }
+        \setbeamercolor { block~body~example } { fg = lamalunga-ink , bg = }
+      }
+      {
+        \setbeamercolor { block~title }
+          { fg = lamalunga-primary , bg = lamalunga-primary-t4 }
+        \setbeamercolor { block~body }
+          { fg = lamalunga-ink , bg = lamalunga-primary-t6 }
+        \setbeamercolor { block~title~alerted }
+          { fg = lamalunga-accent , bg = lamalunga-accent-vivid-t4 }
+        \setbeamercolor { block~body~alerted }
+          { fg = lamalunga-ink , bg = lamalunga-accent-vivid-t6 }
+        \setbeamercolor { block~title~example }
+          { fg = lamalunga-accent2 , bg = lamalunga-accent2-t4 }
+        \setbeamercolor { block~body~example }
+          { fg = lamalunga-ink , bg = lamalunga-accent2-t6 }
+      }
+    \setbeamercolor { block~rule } { fg = lamalunga-primary }
+    \setbeamercolor { block~rule~alerted } { fg = lamalunga-accent-vivid }
+    \setbeamercolor { block~rule~example } { fg = lamalunga-accent2 }
+  }
+
+\lamalunga@colors
+
+% Plots and listings take the same palette, if their packages are loaded.
+\AtBeginDocument
+  {
+    \cs_if_exist:NT \pgfplotsset
+      {
+        \pgfplotscreateplotcyclelist { lamalunga }
+          {
+            { lamalunga-primary , mark = * } ,
+            { lamalunga-accent , mark = square* } ,
+            { lamalunga-accent2 , mark = triangle* } ,
+            { lamalunga-muted , mark = diamond* } ,
+            { lamalunga-primary-t2 , mark = o } ,
+            { lamalunga-accent-t2 , mark = square }
+          }
+        \pgfplotsset
+          {
+            every~axis/.append~style =
+              {
+                cycle~list~name = lamalunga ,
+                axis~line~style = { lamalunga-muted } ,
+                tick~style = { lamalunga-muted } ,
+                every~tick~label/.append~style = { lamalunga-muted } ,
+                major~grid~style = { lamalunga-primary-t6 } ,
+              }
+          }
+      }
+    \cs_if_exist:NT \lstdefinestyle
+      {
+        \lstdefinestyle { lamalunga }
+          {
+            basicstyle = \ttfamily \small ,
+            keywordstyle = \color { lamalunga-primary } \bfseries ,
+            commentstyle = \color { lamalunga-muted } \itshape ,
+            stringstyle = \color { lamalunga-accent } ,
+            numberstyle = \color { lamalunga-muted } \tiny ,
+            backgroundcolor = \color { lamalunga-primary-t7 } ,
+            rulecolor = \color { lamalunga-primary-t4 } ,
+          }
+        \lstset { style = lamalunga }
+      }
+  }
+
+\endinput

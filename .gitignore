@@ -1,0 +1,38 @@
+# LaTeX build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex
+*.synctex.gz
+*.synctex(busy)
+*.toc
+*.vrb
+*.xdv
+*-blx.bib
+*.dvi
+_minted*/
+*.listing
+
+# compiled slides, except the two demos shown in the README
+*.pdf
+!demo/lamalunga-demo.pdf
+!demo/lamalunga-demo-dark.pdf
+
+# editors and systems
+*~
+*.swp
+.DS_Store
+.vscode/
+.idea/
+__pycache__/
+doc/gallery/.build/

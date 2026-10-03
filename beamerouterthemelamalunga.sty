@@ -1,0 +1,223 @@
+%% beamerouterthemelamalunga.sty
+%% Lamalunga outer theme: margins, frame titles, progress bar, foot lines,
+%% composition guides.
+%%
+%% Copyright (C) 2026 Donato Meoli
+%%
+%% This work may be distributed and/or modified under the conditions of the
+%% LaTeX Project Public License, either version 1.3c of this license or (at
+%% your option) any later version. The latest version of this license is in
+%%   https://www.latex-project.org/lppl.txt
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% The Current Maintainer of this work is Donato Meoli.
+\NeedsTeXFormat{LaTeX2e}[2022/06/01]
+\ProvidesExplPackage{beamerouterthemelamalunga}{2026/10/03}{0.1.0}
+  {Lamalunga outer theme}
+
+\RequirePackage{lamalunga}
+\prg_generate_conditional_variant:Nnn \tl_if_in:nn { nV } { T }
+\IfFileExists { appendixnumberbeamer.sty }
+  { \RequirePackage { appendixnumberbeamer } } { }
+
+\str_if_eq:VnT \g_lamalunga_headline_tl { miniframes }
+  { \useoutertheme [ subsection = false ] { miniframes } }
+
+% horizontal margins phi times the vertical ones
+\setbeamersize
+  {
+    text~margin~left = \lamalungahmargin ,
+    text~margin~right = \lamalungahmargin
+  }
+
+% ---------------------------------------------------------------------------
+% Progress: the fraction of frames shown so far, and a bar of that length
+% ---------------------------------------------------------------------------
+
+\cs_new:Npn \lamalunga@progress
+  {
+    \fp_eval:n
+      {
+        min( 1 , max( 0 , ( \insertframenumber ) /
+          max( 1 , \inserttotalframenumber ) ) )
+      }
+  }
+\dim_new:N \lamalungabarheight
+\dim_set:Nn \lamalungabarheight { \fp_eval:n { \c_lamalunga_phi_fp } pt }
+% \lamalungaprogressbar{width}
+\NewDocumentCommand \lamalungaprogressbar { m }
+  {
+    \hbox_to_wd:nn {#1}
+      {
+        \usebeamercolor { progress~bar }
+        \color { progress~bar.fg }
+        \vrule width \lamalunga@progress \dimexpr #1 \relax
+          height \lamalungabarheight depth 0pt
+        \color { progress~bar.bg }
+        \vrule width \fp_eval:n { 1 - \lamalunga@progress } \dimexpr #1 \relax
+          height \lamalungabarheight depth 0pt
+      }
+  }
+
+\cs_new:Npn \lamalunga@framenumber
+  {
+    \str_case:Vn \g_lamalunga_numbering_tl
+      {
+        { fraction }
+          { \insertframenumber \, / \, \inserttotalframenumber }
+        { counter } { \insertframenumber }
+        { none } { }
+      }
+  }
+
+% ---------------------------------------------------------------------------
+% Templates that depend on options; re-run by \lamalungaset
+% ---------------------------------------------------------------------------
+
+\cs_new_protected:Npn \lamalunga@outer
+  {
+    % frame title: the vertical margin above, a golden pair of skips below
+    \setbeamertemplate { frametitle }
+      {
+        \nointerlineskip
+        \vskip \lamalungavmargin
+        \begin{beamercolorbox} [ wd = \paperwidth ] { frametitle }
+          \hspace* { \lamalungahmargin }
+          \begin{minipage} [t]
+            { \dimexpr \paperwidth - 2 \lamalungahmargin \relax }
+            \usebeamerfont { frametitle }
+            \raggedright
+            \str_if_eq:VnTF \g_lamalunga_titles_tl { boxed }
+              { \lamalunga_highlight_lines:nV { lamalunga-primary } \insertframetitle }
+              { \insertframetitle \par }
+            \tl_if_empty:NF \insertframesubtitle
+              {
+                \vskip \fib { 4 } pt
+                { \usebeamerfont { framesubtitle } \usebeamercolor [fg]
+                  { framesubtitle } \insertframesubtitle \par }
+              }
+            \vskip \fib { 5 } pt
+            \str_if_eq:VnT \g_lamalunga_progressbar_tl { frametitle }
+              { \lamalungaprogressbar { \linewidth } }
+          \end{minipage}
+        \end{beamercolorbox}
+        \vskip \fib { 6 } pt
+      }
+
+    \str_if_eq:VnT \g_lamalunga_headline_tl { none }
+      {
+        \setbeamertemplate { headline }
+          {
+            \str_if_eq:VnT \g_lamalunga_progressbar_tl { head }
+              { \lamalungaprogressbar { \paperwidth } }
+          }
+      }
+
+    \str_case:Vn \g_lamalunga_footline_tl
+      {
+        { none }
+          {
+            \setbeamertemplate { footline }
+              {
+                \str_if_eq:VnT \g_lamalunga_progressbar_tl { foot }
+                  { \lamalungaprogressbar { \paperwidth } }
+              }
+          }
+        { minimal }
+          {
+            \setbeamertemplate { footline }
+              {
+                \begin{beamercolorbox}
+                  [ wd = \paperwidth , ht = \lamalungavmargin , dp = 0pt ,
+                    leftskip = \lamalungahmargin ,
+                    rightskip = \lamalungahmargin ] { footline }
+                  \usebeamerfont { footline }
+                  \vbox_to_ht:nn { \lamalungavmargin }
+                    {
+                      \vss
+                      \hbox_to_wd:nn
+                        { \dimexpr \paperwidth - 2 \lamalungahmargin \relax }
+                        {
+                          \insertshortauthor
+                          \tl_if_empty:NF \insertshorttitle
+                            { \enspace \textperiodcentered \enspace \insertshorttitle }
+                          \hfil
+                          \lamalunga@framenumber
+                        }
+                      \vskip 0pt plus \fp_eval:n { 1 / \c_lamalunga_phi_fp } fil
+                    }
+                \end{beamercolorbox}
+                \str_if_eq:VnT \g_lamalunga_progressbar_tl { foot }
+                  { \nointerlineskip \lamalungaprogressbar { \paperwidth } }
+              }
+          }
+        { infolines }
+          {
+            % three fields in the proportion 1 : phi : 1
+            \setbeamertemplate { footline }
+              {
+                \dim_set:Nn \l_tmpa_dim
+                  { \fp_to_dim:n { \paperwidth / ( 2 + \c_lamalunga_phi_fp ) } }
+                \usebeamerfont { footline }
+                \hbox:n
+                  {
+                    \begin{beamercolorbox}
+                      [ wd = \l_tmpa_dim , ht = \lamalungavmargin , dp = 0pt ,
+                        leftskip = \lamalungahmargin ] { footline }
+                      \vbox_to_ht:nn { \lamalungavmargin }
+                        { \vss \hbox:n { \insertshortauthor } \vss }
+                    \end{beamercolorbox}
+                    \begin{beamercolorbox}
+                      [ wd = \fp_eval:n { \c_lamalunga_phi_fp } \l_tmpa_dim ,
+                        ht = \lamalungavmargin , dp = 0pt , center ] { footline }
+                      \vbox_to_ht:nn { \lamalungavmargin }
+                        { \vss \hbox:n { \insertshorttitle } \vss }
+                    \end{beamercolorbox}
+                    \begin{beamercolorbox}
+                      [ wd = \l_tmpa_dim , ht = \lamalungavmargin , dp = 0pt ,
+                        right , rightskip = \lamalungahmargin ] { footline }
+                      \vbox_to_ht:nn { \lamalungavmargin }
+                        {
+                          \vss
+                          \hbox:n { \insertshortdate \quad \lamalunga@framenumber }
+                          \vss
+                        }
+                    \end{beamercolorbox}
+                  }
+                \str_if_eq:VnT \g_lamalunga_progressbar_tl { foot }
+                  { \nointerlineskip \lamalungaprogressbar { \paperwidth } }
+              }
+          }
+      }
+
+    % composition guides: thirds and golden sections of the page
+    \str_if_eq:VnTF \g_lamalunga_guides_tl { none }
+      { \setbeamertemplate { background } { } }
+      {
+        \setbeamertemplate { background }
+          {
+            \begin{tikzpicture}
+              \useasboundingbox (0,0) rectangle (\paperwidth, \paperheight);
+              \tl_if_in:nVT { thirds , both } \g_lamalunga_guides_tl
+                { \lamalunga@guides { 1/3 } { dashed } }
+              \tl_if_in:nVT { golden , both } \g_lamalunga_guides_tl
+                { \lamalunga@guides { \fp_use:N \c_lamalunga_phi_fp ^ (-2) } { solid } }
+            \end{tikzpicture}
+          }
+      }
+  }
+
+% lines at fraction f and 1 - f of the page, both directions
+\cs_new_protected:Npn \lamalunga@guides #1 #2
+  {
+    \fp_set:Nn \l_tmpa_fp {#1}
+    \draw [ lamalunga-accent-vivid , opacity = 0.618 , line~width = 0.4pt , #2 ]
+      ( \fp_use:N \l_tmpa_fp \paperwidth , 0 ) -- ++ ( 0 , \paperheight )
+      ( \fp_eval:n { 1 - \l_tmpa_fp } \paperwidth , 0 ) -- ++ ( 0 , \paperheight )
+      ( 0 , \fp_use:N \l_tmpa_fp \paperheight ) -- ++ ( \paperwidth , 0 )
+      ( 0 , \fp_eval:n { 1 - \l_tmpa_fp } \paperheight ) -- ++ ( \paperwidth , 0 ) ;
+  }
+
+\lamalunga@outer
+
+\endinput

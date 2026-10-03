@@ -1,0 +1,445 @@
+%% beamerinnerthemelamalunga.sty
+%% Lamalunga inner theme: title and section pages, standout frames, blocks,
+%% lists, golden columns and focal points.
+%%
+%% Copyright (C) 2026 Donato Meoli
+%%
+%% This work may be distributed and/or modified under the conditions of the
+%% LaTeX Project Public License, either version 1.3c of this license or (at
+%% your option) any later version. The latest version of this license is in
+%%   https://www.latex-project.org/lppl.txt
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% The Current Maintainer of this work is Donato Meoli.
+\NeedsTeXFormat{LaTeX2e}[2022/06/01]
+\ProvidesExplPackage{beamerinnerthemelamalunga}{2026/10/03}{0.1.0}
+  {Lamalunga inner theme}
+
+\RequirePackage{lamalunga}
+
+% A frame option, \begin{frame}[golden], puts the content at the golden
+% section of the free height: 1 fill above and phi fill below, i.e. 38.2% of
+% the free space above, close to where the eye places the optical center (a
+% little above the geometric one). Title, section and standout pages use it.
+\define@key { beamerframe } { golden } [ true ] { \lamalunga@golden }
+\cs_new_protected:Npn \lamalunga@golden
+  {
+    \beamer@frametopskip = 0pt plus 1fill \relax
+    \beamer@framebottomskip = 0pt plus \fp_use:N \c_lamalunga_phi_fp fill \relax
+    \beamer@frametopskipautobreak = 0pt plus .382\paperheight \relax
+    \beamer@framebottomskipautobreak = 0pt plus .618\paperheight \relax
+    \cs_set_eq:NN \beamer@initfirstlineunskip \prg_do_nothing:
+  }
+
+\cs_new:Npn \__lamalunga_twodigits:n #1
+  { \int_compare:nNnT {#1} < { 10 } { 0 } \int_eval:n {#1} }
+
+% ---------------------------------------------------------------------------
+% Title page: the page is a golden rectangle; the title sits in its first
+% square, the spiral turns in the rest
+% ---------------------------------------------------------------------------
+
+\dim_new:N \l__lamalunga_title_dim
+\dim_new:N \l__lamalunga_spiral_dim
+
+\cs_new_protected:Npn \lamalunga@titlespiral
+  {
+    \dim_set:Nn \l__lamalunga_spiral_dim
+      { \fp_to_dim:n { min( \paperheight , \paperwidth / \c_lamalunga_phi_fp ) } }
+    \begin{tikzpicture} [ remember~picture , overlay ]
+      \usebeamercolor { spiral }
+      \begin{scope} [ shift = { (current~page.south~west) } ]
+        \lamalungaspiral [ 1 ]
+          { \fp_to_dim:n
+              { ( \paperwidth - \c_lamalunga_phi_fp * \l__lamalunga_spiral_dim ) / 2 } }
+          { 0pt } { \l__lamalunga_spiral_dim } { 10 }
+          { draw = spiral.bg , line~width = 0.4pt }
+          { draw = spiral.fg , line~width = \lamalungabarheight }
+      \end{scope}
+    \end{tikzpicture}
+  }
+
+\setbeamertemplate { title~page }
+  {
+    \bool_if:NT \g_lamalunga_spiral_bool { \lamalunga@titlespiral }
+    \bool_if:NTF \g_lamalunga_spiral_bool
+      {
+        \dim_set:Nn \l__lamalunga_title_dim
+          {
+            \fp_to_dim:n
+              {
+                min( \textwidth , min( \paperheight , \paperwidth / \c_lamalunga_phi_fp )
+                  - 2 * \lamalungahmargin )
+              }
+          }
+      }
+      { \dim_set:Nn \l__lamalunga_title_dim { \goldenmajor { \textwidth } } }
+    \begin{minipage} [t] { \l__lamalunga_title_dim }
+      \raggedright
+      {
+        \usebeamerfont { title } \usebeamercolor [fg] { title }
+        \str_if_eq:VnTF \g_lamalunga_titles_tl { boxed }
+          { \lamalunga_highlight_lines:nV { lamalunga-primary } \inserttitle }
+          { \inserttitle \par }
+      }
+      \tl_if_empty:NF \insertsubtitle
+        {
+          \vskip \fib { 5 } pt
+          { \usebeamerfont { subtitle } \usebeamercolor [fg] { subtitle }
+            \insertsubtitle \par }
+        }
+      \vskip \fib { 7 } pt
+      { \usebeamercolor [fg] { title~rule }
+        \rule { \goldenminor { \linewidth } } { \lamalungabarheight } \par }
+      \vskip \fib { 7 } pt
+      \tl_if_empty:NF \insertauthor
+        { { \usebeamerfont { author } \usebeamercolor [fg] { author }
+            \insertauthor \par } }
+      \tl_if_empty:NF \insertinstitute
+        {
+          \vskip \fib { 4 } pt
+          { \usebeamerfont { institute } \usebeamercolor [fg] { institute }
+            \insertinstitute \par }
+        }
+      \tl_if_empty:NF \insertdate
+        {
+          \vskip \fib { 6 } pt
+          { \usebeamerfont { date } \usebeamercolor [fg] { date }
+            \insertdate \par }
+        }
+      \tl_if_empty:NF \inserttitlegraphic
+        { \vskip \fib { 7 } pt \inserttitlegraphic \par }
+    \end{minipage}
+  }
+
+\cs_set_protected:Npn \maketitle
+  {
+    \ifbeamer@inframe
+      \titlepage
+    \else
+      \begin{frame} [ plain , golden ] \titlepage \end{frame}
+    \fi
+  }
+
+% ---------------------------------------------------------------------------
+% Section pages
+% ---------------------------------------------------------------------------
+
+\setbeamertemplate { section~page }
+  {
+    \raggedright
+    { \usebeamerfont { section~number } \usebeamercolor [fg] { section~number }
+      \__lamalunga_twodigits:n { \insertsectionnumber } \par }
+    \vskip \fib { 5 } pt
+    {
+      \usebeamerfont { section~title } \usebeamercolor [fg] { section~title }
+      \str_if_eq:VnTF \g_lamalunga_titles_tl { boxed }
+        { \lamalunga_highlight_lines:nV { lamalunga-primary } \insertsectionhead }
+        { \insertsectionhead \par }
+    }
+    \vskip \fib { 7 } pt
+    \lamalungaprogressbar { \goldenmajor { \textwidth } }
+  }
+
+\cs_new_protected:Npn \lamalunga@sectionframe
+  {
+    \str_case:Vn \g_lamalunga_sectionpage_tl
+      {
+        { progressbar }
+          { \begin{frame} [ golden ] \sectionpage \end{frame} }
+        { toc }
+          {
+            \begin{frame} { \contentsname }
+              \tableofcontents [ currentsection , hideothersubsections ]
+            \end{frame}
+          }
+      }
+  }
+\AtBeginSection { \lamalunga@sectionframe }
+
+\setbeamertemplate { section~in~toc }
+  {
+    \leavevmode
+    { \color { lamalunga-primary } \__lamalunga_twodigits:n { \inserttocsectionnumber } }
+    \enspace \inserttocsection \par
+  }
+\setbeamertemplate { subsection~in~toc }
+  { \leavevmode \hskip 1.618em \inserttocsubsection \par }
+
+% ---------------------------------------------------------------------------
+% Standout frames: \begin{frame}[standout] ... \end{frame}
+% ---------------------------------------------------------------------------
+
+\bool_new:N \g__lamalunga_standout_bool
+\define@key { beamerframe } { standout } [ true ]
+  {
+    \lamalunga@golden
+    \beamer@noframenumberingtrue
+    % the colors and templates are set once all the keys are read, since
+    % \setbeamercolor inside a key would lose the keys that follow it
+    \tl_put_right:Nn \beamer@frametemplate { \__lamalunga_standout: }
+  }
+\cs_new_protected:Npn \__lamalunga_standout:
+  {
+    \bool_gset_true:N \g__lamalunga_standout_bool
+    \begingroup
+    \setbeamercolor { background~canvas } { bg = lamalunga-primary }
+    \setbeamercolor { normal~text } { fg = lamalunga-on-primary , bg = lamalunga-primary }
+    \setbeamercolor { structure } { fg = lamalunga-on-primary }
+    \setbeamercolor { alerted~text } { fg = lamalunga-on-primary }
+    \setbeamertemplate { frametitle } { }
+    \setbeamertemplate { footline } { }
+    \setbeamertemplate { headline } { }
+    \setbeamertemplate { background } { }
+    \centering
+    \usebeamercolor [fg] { standout }
+    \usebeamerfont { standout }
+  }
+\apptocmd \beamer@reseteecodes
+  {
+    \bool_if:NT \g__lamalunga_standout_bool
+      { \endgroup \bool_gset_false:N \g__lamalunga_standout_bool }
+  } { } { }
+
+% ---------------------------------------------------------------------------
+% Blocks: tinted (title band and body in golden tints) or rule (a single
+% line of golden thickness at the left, no fill)
+% ---------------------------------------------------------------------------
+
+\newsavebox \lamalunga@blockbox
+\dim_new:N \l__lamalunga_rule_gap_dim
+\dim_set:Nn \l__lamalunga_rule_gap_dim { \fib { 6 } pt }
+
+\cs_new_protected:Npn \lamalunga@blockbegin #1
+  {
+    \par \vskip \medskipamount
+    \str_if_eq:VnTF \g_lamalunga_blocks_tl { rule }
+      {
+        \begin{lrbox} { \lamalunga@blockbox }
+        \begin{minipage}
+          { \dimexpr \linewidth - \l__lamalunga_rule_gap_dim - \lamalungabarheight \relax }
+          \tl_if_empty:NF \insertblocktitle
+            {
+              { \usebeamerfont* { block~title #1 } \usebeamercolor [fg]
+                { block~title #1 } \insertblocktitle \par }
+              \vskip \fib { 4 } pt
+            }
+          \usebeamerfont { block~body #1 } \usebeamercolor [fg] { block~body #1 }
+      }
+      {
+        \str_if_eq:VnTF \g_lamalunga_corners_tl { rounded }
+          {
+            \begin{beamerboxesrounded}
+              [ upper = block~title #1 , lower = block~body #1 , shadow = false ]
+              { \usebeamerfont* { block~title #1 } \insertblocktitle }
+            \usebeamerfont { block~body #1 }
+          }
+          { \__lamalunga_block_square_begin:n {#1} }
+      }
+  }
+\cs_new_protected:Npn \__lamalunga_block_square_begin:n #1
+  {
+        \tl_if_empty:NF \insertblocktitle
+          {
+            \begin{beamercolorbox} [ colsep* = \fib { 5 } pt ] { block~title #1 }
+              \usebeamerfont* { block~title #1 } \insertblocktitle
+            \end{beamercolorbox}
+            { \parskip 0pt \par }
+            \nointerlineskip
+          }
+        \usebeamerfont { block~body #1 }
+        \begin{beamercolorbox} [ colsep* = \fib { 5 } pt , vmode ] { block~body #1 }
+          \vskip -0.25ex \vbox { }
+  }
+\cs_new_protected:Npn \lamalunga@blockend #1
+  {
+    \str_if_eq:VnTF \g_lamalunga_blocks_tl { rule }
+      {
+        \end{minipage}
+        \end{lrbox}
+        \hbox:n
+          {
+            { \usebeamercolor [fg] { block~rule #1 }
+              \vrule width \lamalungabarheight }
+            \hskip \l__lamalunga_rule_gap_dim
+            \usebox \lamalunga@blockbox
+          }
+      }
+      {
+        \str_if_eq:VnTF \g_lamalunga_corners_tl { rounded }
+          { \end{beamerboxesrounded} }
+          { \end{beamercolorbox} }
+      }
+    \vskip \smallskipamount
+  }
+
+\setbeamertemplate { block~begin } { \lamalunga@blockbegin { } }
+\setbeamertemplate { block~end } { \lamalunga@blockend { } }
+\setbeamertemplate { block~alerted~begin } { \lamalunga@blockbegin { ~alerted } }
+\setbeamertemplate { block~alerted~end } { \lamalunga@blockend { ~alerted } }
+\setbeamertemplate { block~example~begin } { \lamalunga@blockbegin { ~example } }
+\setbeamertemplate { block~example~end } { \lamalunga@blockend { ~example } }
+
+% ---------------------------------------------------------------------------
+% Lists: squares whose sides shrink by phi at every level, centerd on the
+% x-height
+% ---------------------------------------------------------------------------
+
+\cs_new_protected:Npn \__lamalunga_square:n #1
+  {
+    \raisebox { \dimexpr 0.5ex - #1 / 2 \relax }
+      { \rule { #1 } { #1 } }
+  }
+% Bauhaus bullets: square, circle and triangle of equal area (so that no
+% shape outweighs the others), in the primary and the two accents
+\cs_new_protected:Npn \__lamalunga_bauhaus:nn #1 #2
+  {
+    \fp_set:Nn \l_tmpa_fp { #1 * \c_lamalunga_phi_fp ^ (-2) }
+    \raisebox { 0.5ex }
+      {
+        \tikz [ baseline = 0pt ] {
+          \str_case:nn {#2}
+            {
+              { square }
+                {
+                  \fill [ lamalunga-primary ]
+                    ( -0.5 * \fp_use:N \l_tmpa_fp em , -0.5 * \fp_use:N \l_tmpa_fp em )
+                    rectangle
+                    ( 0.5 * \fp_use:N \l_tmpa_fp em , 0.5 * \fp_use:N \l_tmpa_fp em ) ;
+                }
+              { circle }
+                {
+                  \fill [ lamalunga-accent-vivid ] ( 0 , 0 ) circle
+                    [ radius = \fp_eval:n { \l_tmpa_fp / sqrt(pi) } em ] ;
+                }
+              { triangle }
+                {
+                  \fp_set:Nn \l_tmpb_fp { \l_tmpa_fp * sqrt( 4 / sqrt(3) ) }
+                  \fill [ lamalunga-accent2 ]
+                    ( -0.5 * \fp_use:N \l_tmpb_fp em , -0.2887 * \fp_use:N \l_tmpb_fp em )
+                    -- ( 0.5 * \fp_use:N \l_tmpb_fp em , -0.2887 * \fp_use:N \l_tmpb_fp em )
+                    -- ( 0 , 0.5774 * \fp_use:N \l_tmpb_fp em ) -- cycle ;
+                }
+            }
+        }
+      }
+  }
+\cs_new_protected:Npn \lamalunga@bullets
+  {
+    \str_if_eq:VnTF \g_lamalunga_bullets_tl { bauhaus }
+      {
+        \setbeamertemplate { itemize~item } { \__lamalunga_bauhaus:nn { 1 } { square } }
+        \setbeamertemplate { itemize~subitem }
+          { \__lamalunga_bauhaus:nn { 0.8 } { circle } }
+        \setbeamertemplate { itemize~subsubitem }
+          { \__lamalunga_bauhaus:nn { 0.7 } { triangle } }
+      }
+      {
+        \setbeamertemplate { itemize~item }
+          { \__lamalunga_square:n { \goldenpower { -2 } em } }
+        \setbeamertemplate { itemize~subitem }
+          { \__lamalunga_square:n { \goldenpower { -3 } em } }
+        \setbeamertemplate { itemize~subsubitem }
+          { \__lamalunga_square:n { \goldenpower { -4 } em } }
+      }
+  }
+\lamalunga@bullets
+\setbeamertemplate { enumerate~item } { \insertenumlabel . }
+\setbeamertemplate { enumerate~subitem } { \insertsubenumlabel . }
+\setbeamertemplate { enumerate~subsubitem } { \insertsubsubenumlabel . }
+\setbeamertemplate { itemize/enumerate~body~begin }
+  { \setlength \itemsep { \fib { 5 } pt } }
+\setbeamertemplate { itemize/enumerate~subbody~begin }
+  { \setlength \itemsep { \fib { 4 } pt } }
+
+\setbeamertemplate { caption } [ numbered ]
+\setbeamertemplate { caption~label~separator } { .~ }
+\setbeamertemplate { bibliography~item } [ text ]
+
+% ---------------------------------------------------------------------------
+% Golden columns: \begin{goldencolumns}[major|minor] ... \nextcolumn ...
+% \end{goldencolumns}, the first column being the major (61.8%) or the
+% minor (38.2%) part of the text width, the gutter a Fibonacci number
+% ---------------------------------------------------------------------------
+
+\dim_new:N \l__lamalunga_first_dim
+\dim_new:N \l__lamalunga_second_dim
+\NewDocumentEnvironment { goldencolumns } { O{ major } }
+  {
+    \dim_set:Nn \l_tmpa_dim { \textwidth - \fib { 8 } pt }
+    \str_if_eq:nnTF {#1} { minor }
+      {
+        \dim_set:Nn \l__lamalunga_first_dim { \goldenminor { \l_tmpa_dim } }
+        \dim_set:Nn \l__lamalunga_second_dim { \goldenmajor { \l_tmpa_dim } }
+      }
+      {
+        \dim_set:Nn \l__lamalunga_first_dim { \goldenmajor { \l_tmpa_dim } }
+        \dim_set:Nn \l__lamalunga_second_dim { \goldenminor { \l_tmpa_dim } }
+      }
+    \begin{columns} [ T , onlytextwidth ]
+    \begin{column} { \l__lamalunga_first_dim }
+  }
+  {
+    \end{column}
+    \end{columns}
+  }
+\NewDocumentCommand \nextcolumn { }
+  {
+    \end{column}
+    \begin{column} { \l__lamalunga_second_dim }
+  }
+
+% ---------------------------------------------------------------------------
+% Focal points: \focalpoint[thirds|golden]{nw|ne|sw|se}{content} centers
+% the content on one of the four intersections of the guides
+% ---------------------------------------------------------------------------
+
+\NewDocumentCommand \focalpoint { O{ golden } m m }
+  {
+    \fp_set:Nn \l_tmpa_fp
+      { \str_if_eq:nnTF {#1} { thirds } { 1/3 } { \c_lamalunga_phi_fp ^ (-2) } }
+    % horizontal and vertical fractions of the page, from the lower left
+    \fp_set:Nn \l_tmpb_fp
+      { \str_case:nn {#2} { { nw } { 0 } { ne } { 1 } { sw } { 0 } { se } { 1 } } }
+    \fp_set:Nn \l_tmpb_fp
+      { \l_tmpb_fp * ( 1 - \l_tmpa_fp ) + ( 1 - \l_tmpb_fp ) * \l_tmpa_fp }
+    \str_case:nnTF {#2} { { nw } { } { ne } { } }
+      { \fp_set:Nn \l_tmpa_fp { 1 - \l_tmpa_fp } } { }
+    \tikz [ remember~picture , overlay ]
+      \node at
+        ( [ shift = { ( \fp_use:N \l_tmpb_fp \paperwidth ,
+                        \fp_use:N \l_tmpa_fp \paperheight ) } ]
+          current~page.south~west )
+        {#3} ;
+  }
+
+% Boxed alerts: \alert{...} becomes a highlight in the accent
+\newsavebox \lamalunga@alertbox
+\cs_new_protected:Npn \lamalunga@alerts
+  {
+    \str_if_eq:VnTF \g_lamalunga_alerts_tl { boxed }
+      {
+        \setbeamertemplate { alerted~text~begin }
+          { \begin{lrbox} { \lamalunga@alertbox } \color { lamalunga-on-highlight } }
+        \setbeamertemplate { alerted~text~end }
+          {
+            \end{lrbox}
+            \lamalunga_highlight:nn { highlight }
+              { \usebox \lamalunga@alertbox }
+          }
+      }
+      {
+        \setbeamertemplate { alerted~text~begin } { }
+        \setbeamertemplate { alerted~text~end } { }
+      }
+  }
+\lamalunga@alerts
+
+\cs_new_protected:Npn \lamalunga@templates
+  {
+    \lamalunga@outer
+    \lamalunga@bullets
+    \lamalunga@alerts
+  }
+
+\endinput

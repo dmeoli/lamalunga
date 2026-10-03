@@ -1,0 +1,225 @@
+% Lamalunga: the theme describes itself. Every number and color on these
+% slides is computed when the document is compiled.
+\documentclass[11pt]{beamer}
+
+\providecommand\demooptions{}
+\edef\next{\noexpand\usetheme[\demooptions]{lamalunga}}\next
+
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\title{Lamalunga}
+\subtitle{A beamer theme of golden proportions and computed colors}
+\author{Donato Meoli}
+\institute{github.com/dmeoli/lamalunga}
+\date{\today}
+
+% a golden swatch with the name and the hexadecimal code of a color
+\newcommand\swatch[2]{%
+  \begin{tikzpicture}[baseline=(s.base)]
+    \fill[#1] (0,0) rectangle (1.618,1);
+    \convertcolorspec{named}{#1}{HTML}\swatchhex
+    \node[anchor=north west, inner sep=0pt, align=left,
+      font=\modularsize{-0.5}] (s) at (0,-0.12)
+      {#2\\[-1pt]{\ttfamily\color{lamalunga-muted}\#\swatchhex}};
+  \end{tikzpicture}}
+\newcommand\harmonyrow[1]{%
+  \colorharmony{demo}{#1}%
+  \swatch{demo-base}{base}\hfill
+  \swatch{demo-complement}{complement}\hfill
+  \swatch{demo-split-a}{split}\hfill
+  \swatch{demo-triad-a}{triad}\hfill
+  \swatch{demo-analog-a}{analog}}
+
+% a length in millimetres
+\ExplSyntaxOn
+\NewDocumentCommand \inmm { m }
+  { \fp_eval:n { round( \dim_to_decimal_in_unit:nn {#1} { 1mm } , 1 ) } \,mm }
+\ExplSyntaxOff
+
+\begin{document}
+
+\maketitle
+
+\section{Proportion}
+
+\begin{frame}{The page is a golden rectangle}
+  \begin{goldencolumns}
+    The page measures \inmm{\paperwidth} by \inmm{\paperheight}, i.e., a
+    ratio of
+    \(\pgfmathparse{\paperwidth/\paperheight}\pgfmathprintnumber[precision=4]{\pgfmathresult}\),
+    and the margins are \fib{9}\,pt and \fib{8}\,pt,
+    two consecutive Fibonacci numbers: since their ratio is again
+    \(\varphi\), the block of text is a golden rectangle as well.
+    \nextcolumn
+    \goldenspiral{2.4cm}
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}{Golden columns}
+  \begin{goldencolumns}
+    \begin{block}{Major}
+      The first column takes \(\varphi^{-1} \approx 61.8\%\) of the width,
+      the gutter is \fib{8}\,pt.
+    \end{block}
+    \nextcolumn
+    \begin{block}{Minor}
+      The second takes \(\varphi^{-2} \approx 38.2\%\).
+    \end{block}
+  \end{goldencolumns}
+  \fibskip{8}
+  \begin{goldencolumns}[minor]
+    \begin{exampleblock}{Minor first}
+      \texttt{[minor]} swaps them.
+    \end{exampleblock}
+    \nextcolumn
+    \begin{alertblock}{Major second}
+      The two parts always add up to the text width.
+    \end{alertblock}
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}{A modular scale of type}
+  Every size is the base times a power of the ratio, here \(\varphi\);
+  half steps give the small print.
+  \fibskip{7}
+  \begin{tabular}{@{}lrl@{}}
+    \toprule
+    step & size (pt) & used for \\
+    \midrule
+    \(2\)   & \modularscale{2}    & title, section pages, standout \\
+    \(1\)   & \modularscale{1}    & frame titles, subtitles \\
+    \(0\)   & \modularscale{0}    & text, block titles \\
+    \(-1/2\) & \modularscale{-0.5} & foot line, captions, footnotes \\
+    \bottomrule
+  \end{tabular}
+  \fibskip{7}
+  {\modularsize{-0.5}\color{lamalunga-muted}
+   The half step \(\sqrt{\varphi}\) is the ratio of the sides of the Kepler
+   triangle; spacings are Fibonacci numbers \fib{4}, \fib{5}, \fib{6},
+   \fib{7}, \fib{8}\,pt.}
+\end{frame}
+
+\section{Color}
+
+\begin{frame}{One color, and the others follow}
+  \harmonyrow{lamalunga-seed}
+  \fibskip{8}
+  \begin{goldencolumns}
+    The accents are rotations of the hue of the primary on the
+    painter's wheel (red, yellow, blue), so violet calls for gold.
+    Before they are used for text, they are moved in lightness until
+    they reach a contrast of 4.5:1.
+    \nextcolumn
+    \begin{tabular}{@{}lr@{}}
+      \toprule
+      on the canvas & ratio \\
+      \midrule
+      \textcolor{lamalunga-ink}{ink} & \contrastratio{lamalunga-ink}{lamalunga-canvas} \\
+      \textcolor{lamalunga-primary}{primary} & \contrastratio{lamalunga-primary}{lamalunga-canvas} \\
+      \textcolor{lamalunga-accent}{accent} & \contrastratio{lamalunga-accent}{lamalunga-canvas} \\
+      \textcolor{lamalunga-muted}{muted} & \contrastratio{lamalunga-muted}{lamalunga-canvas} \\
+      \bottomrule
+    \end{tabular}
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}{Any color, by its hexadecimal code}
+  \definecolor{demo-red}{HTML}{C0392B}\harmonyrow{demo-red}
+  \fibskip{7}
+  \definecolor{demo-teal}{HTML}{1F7A7A}\harmonyrow{demo-teal}
+  \fibskip{7}
+  \definecolor{demo-gold}{HTML}{D4A017}\harmonyrow{demo-gold}
+\end{frame}
+
+\begin{frame}{Golden tints}
+  Tints dilute a color by \(\varphi^{-k}\) towards the canvas.
+  \fibskip{8}
+  \foreach \k in {1,...,8}{\swatch{lamalunga-primary-t\k}{t\k}\hfill}\par
+  \fibskip{5}
+  \foreach \k in {1,...,8}{\swatch{lamalunga-accent-t\k}{t\k}\hfill}
+\end{frame}
+
+\section{Composition}
+
+\lamalungaset{guides=both}
+\begin{frame}{Thirds and golden sections}
+  The dashed lines divide the page in thirds, the solid ones at the golden
+  section; \texttt{guides=both} draws them on every frame while one
+  composes the slides.
+  \focalpoint{se}{\tikz\fill[lamalunga-accent-vivid] circle (3pt);}
+\end{frame}
+\lamalungaset{guides=none}
+
+\begin{frame}[standout]
+  Less, but better.
+\end{frame}
+
+\section{Elements}
+
+\begin{frame}{Lists and blocks}
+  \begin{goldencolumns}
+    \begin{itemize}
+      \item squares whose side
+      \begin{itemize}
+        \item shrinks by \(\varphi\)
+        \begin{itemize}
+          \item at every level
+        \end{itemize}
+      \end{itemize}
+      \item \alert{alerts} take the accent
+    \end{itemize}
+    \begin{enumerate}
+      \item numbers
+      \item in the primary
+    \end{enumerate}
+    \nextcolumn
+    \begin{block}{Block}
+      Golden tints.
+    \end{block}
+    \begin{alertblock}{Alert}
+      The accent.
+    \end{alertblock}
+    \begin{exampleblock}{Example}
+      The second accent.
+    \end{exampleblock}
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}[fragile]{Mathematics, code and plots}
+  \begin{goldencolumns}
+    \[
+      \varphi = \frac{1 + \sqrt{5}}{2}, \qquad
+      F_n = \operatorname{round}\Bigl(\frac{\varphi^n}{\sqrt{5}}\Bigr)
+    \]
+\begin{lstlisting}[language=Python]
+def fib(n):
+    # Binet's formula
+    phi = (1 + 5 ** 0.5) / 2
+    return round(phi ** n / 5 ** 0.5)
+\end{lstlisting}
+    \nextcolumn
+    \begin{tikzpicture}
+      \begin{axis}[width=\linewidth, height=0.85\linewidth,
+          tick label style={font=\modularsize{-1}}]
+        \addplot+[domain=0:3, samples=7] {1.618^x};
+        \addplot+[domain=0:3, samples=7] {1.5^x};
+      \end{axis}
+    \end{tikzpicture}
+  \end{goldencolumns}
+\end{frame}
+
+\begin{frame}[standout]
+  Thank you
+\end{frame}
+
+\appendix
+
+\begin{frame}{Backup}
+  Frames after \texttt{\textbackslash appendix} are not counted in the
+  total.
+\end{frame}
+
+\end{document}
