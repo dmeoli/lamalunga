@@ -126,11 +126,32 @@
 % (body leading up to step 1/2, display leading above)
 % (the leading is divided by \baselinestretch, which \selectfont applies
 % again, so that the leading of the scale is the one obtained)
+% (the skips around displays follow the size, as with the size commands of
+% LaTeX: phi^-1 em above and below, phi^-2 em for the short ones)
 \NewDocumentCommand \modularsize { m }
   {
     \fontsize { \modularscale {#1} pt }
       { \fp_eval:n { round( \modularleading {#1} / \baselinestretch , 3 ) } pt }
     \selectfont
+    \__lamalunga_display_skips:
+  }
+\cs_new_protected:Npn \__lamalunga_display_skips:
+  {
+    \skip_set:Nn \abovedisplayskip
+      {
+        \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-1) , 3 ) } em
+        plus \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-3) , 3 ) } em
+        minus \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-2) , 3 ) } em
+      }
+    \skip_set_eq:NN \belowdisplayskip \abovedisplayskip
+    \skip_set:Nn \abovedisplayshortskip
+      { 0pt plus \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-3) , 3 ) } em }
+    \skip_set:Nn \belowdisplayshortskip
+      {
+        \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-2) , 3 ) } em
+        plus \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-3) , 3 ) } em
+        minus \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-3) , 3 ) } em
+      }
   }
 
 % ---------------------------------------------------------------------------

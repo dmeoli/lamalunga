@@ -166,8 +166,13 @@
     \str_if_eq:VnF \g_lamalunga_font_tl { none }
       {
         \usefonttheme { professionalfonts }
-        \RequirePackage { unicode-math }
-        \exp_args:NV \setmathfont \g__lamalunga_math_font_tl
+        % at the end of the preamble, after amsmath and the other packages
+        % of the document, as unicode-math requires
+        \AtEndPreamble
+          {
+            \RequirePackage { unicode-math }
+            \exp_args:NV \setmathfont \g__lamalunga_math_font_tl
+          }
       }
   }
 
