@@ -342,6 +342,7 @@
 % the font of the text in a highlight (the beamer theme sets it bold)
 \tl_new:N \g_lamalunga_highlight_font_tl
 \seq_new:N \l__lamalunga_lines_seq
+\tl_new:N \l__lamalunga_line_tl
 \tl_new:N \l__lamalunga_fill_tl
 % a fill is a colour name, or the name of a role of the palette of the
 % theme (primary, accent, accent2, complement, triad-a, ...), which stands
@@ -385,9 +386,61 @@
   {
     \seq_set_split:Nnn \l__lamalunga_lines_seq { \\ } {#2}
     \seq_map_inline:Nn \l__lamalunga_lines_seq
-      { \lamalunga_highlight:nn {#1} {##1} \par }
+      {
+        % a line break may carry a star or a space, as in \\*[-5pt]
+        \tl_set:Nn \l__lamalunga_line_tl {##1}
+        \regex_replace_once:nnN { \A \* ? \[ [^\]]* \] } { } \l__lamalunga_line_tl
+        \tl_trim_spaces:N \l__lamalunga_line_tl
+        \__lamalunga_wrap:nV {#1} \l__lamalunga_line_tl
+      }
   }
 \cs_generate_variant:Nn \lamalunga_highlight_lines:nn { nV }
+
+% a line wider than the column is broken at its spaces, greedily, so that
+% every box fits; each box is as wide as its own words
+\seq_new:N \l__lamalunga_words_seq
+\tl_new:N \l__lamalunga_try_tl
+\box_new:N \l__lamalunga_try_box
+\tl_new:N \l__lamalunga_wrap_fill_tl
+\cs_new_protected:Npn \__lamalunga_wrap:nn #1 #2
+  {
+    \tl_set:Nn \l__lamalunga_wrap_fill_tl {#1}
+    \seq_set_split:Nnn \l__lamalunga_words_seq { ~ } {#2}
+    \tl_clear:N \l__lamalunga_line_tl
+    \seq_map_function:NN \l__lamalunga_words_seq \__lamalunga_wrap_word:n
+    \tl_if_empty:NF \l__lamalunga_line_tl { \__lamalunga_wrap_flush: }
+  }
+\cs_new_protected:Npn \__lamalunga_wrap_flush:
+  {
+    \exp_args:NVV \lamalunga_highlight:nn
+      \l__lamalunga_wrap_fill_tl \l__lamalunga_line_tl
+    \par
+  }
+\cs_new_protected:Npn \__lamalunga_wrap_word:n #1
+  {
+    \tl_if_empty:NTF \l__lamalunga_line_tl
+      { \tl_set:Nn \l__lamalunga_try_tl {#1} }
+      {
+        \tl_set_eq:NN \l__lamalunga_try_tl \l__lamalunga_line_tl
+        \tl_put_right:Nn \l__lamalunga_try_tl { ~ #1 }
+      }
+    \hbox_set:Nn \l__lamalunga_try_box
+      { \g_lamalunga_highlight_font_tl \l__lamalunga_try_tl }
+    \bool_lazy_and:nnTF
+      { ! \tl_if_empty_p:N \l__lamalunga_line_tl }
+      {
+        \fp_compare_p:nNn
+          { \box_wd:N \l__lamalunga_try_box
+            + 2 * \c_lamalunga_phi_fp ^ (-3) * 1em }
+          > { \linewidth }
+      }
+      {
+        \__lamalunga_wrap_flush:
+        \tl_set:Nn \l__lamalunga_line_tl {#1}
+      }
+      { \tl_set_eq:NN \l__lamalunga_line_tl \l__lamalunga_try_tl }
+  }
+\cs_generate_variant:Nn \__lamalunga_wrap:nn { nV }
 \NewDocumentCommand \highlight { O{highlight} m }
   { \lamalunga_highlight:nn {#1} {#2} }
 

@@ -35,6 +35,150 @@
   { \int_compare:nNnT {#1} < { 10 } { 0 } \int_eval:n {#1} }
 
 % ---------------------------------------------------------------------------
+% Authors and affiliations:
+%   \addaffiliation{key}{text}   in the order in which the marks are given
+%   \addauthor{name}{key, key}   in the order of the authors
+% On the title page the authors form a grid, each name followed by the marks
+% of its affiliations, and the affiliations follow in the small print; the
+% short author of the foot line becomes "first author et al.".
+% ---------------------------------------------------------------------------
+
+\seq_new:N \g__lamalunga_authors_seq
+\seq_new:N \g__lamalunga_affiliations_seq
+\prop_new:N \g__lamalunga_affiliation_prop
+\prop_new:N \g__lamalunga_mark_prop
+\seq_new:N \g__lamalunga_first_seq
+\tl_const:Nn \c__lamalunga_marks_tl
+  {
+    { \textdagger } { \textdaggerdbl } { \textsection } { \textparagraph }
+    { \textdagger \textdagger } { \textdaggerdbl \textdaggerdbl }
+    { \textsection \textsection }
+  }
+
+\NewDocumentCommand \addaffiliation { m m }
+  {
+    \seq_gput_right:Nn \g__lamalunga_affiliations_seq {#1}
+    \prop_gput:Nnn \g__lamalunga_affiliation_prop {#1} {#2}
+    \prop_gput:Nne \g__lamalunga_mark_prop {#1}
+      {
+        \tl_item:Nn \c__lamalunga_marks_tl
+          { \seq_count:N \g__lamalunga_affiliations_seq }
+      }
+  }
+\NewDocumentCommand \addauthor { m m }
+  {
+    \seq_gput_right:Nn \g__lamalunga_authors_seq { {#1} {#2} }
+    \seq_gput_right:Nn \g__lamalunga_first_seq {#1}
+    \__lamalunga_set_author:
+  }
+\cs_new_protected:Npn \__lamalunga_set_author:
+  {
+    \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \g__lamalunga_first_seq { 1 } }
+    \int_compare:nNnT { \seq_count:N \g__lamalunga_first_seq } > { 1 }
+      { \tl_put_right:Nn \l_tmpa_tl { ~et~al. } }
+    \tl_set:Nx \l_tmpb_tl { \seq_use:Nn \g__lamalunga_first_seq { ,~ } }
+    \exp_args:NNVV \__lamalunga_author:Nnn \author \l_tmpa_tl \l_tmpb_tl
+  }
+\cs_new_protected:Npn \__lamalunga_author:Nnn #1 #2 #3 { #1 [#2] {#3} }
+
+% the marks of a list of keys
+\cs_new:Npn \__lamalunga_marks:n #1
+  {
+    \clist_map_function:nN {#1} \__lamalunga_mark:n
+  }
+\cs_new:Npn \__lamalunga_mark:n #1
+  { \prop_item:Nn \g__lamalunga_mark_prop {#1} }
+
+\dim_new:N \l__lamalunga_cell_dim
+\int_new:N \l__lamalunga_cols_int
+\cs_new_protected:Npn \__lamalunga_author_grid:
+  {
+    % at most three columns, two beside the spiral
+    \int_set:Nn \l__lamalunga_cols_int
+      {
+        \int_min:nn { \seq_count:N \g__lamalunga_authors_seq }
+          { \dim_compare:nNnTF { \linewidth } < { 0.5 \paperwidth } { 2 } { 3 } }
+      }
+    \dim_set:Nn \l__lamalunga_cell_dim
+      {
+        \fp_to_dim:n
+          {
+            ( \linewidth - ( \l__lamalunga_cols_int - 1 ) * \fib { 7 } pt )
+              / \l__lamalunga_cols_int
+          }
+      }
+    \raggedright
+    \int_zero:N \l_tmpa_int
+    \seq_map_inline:Nn \g__lamalunga_authors_seq
+      {
+        \int_incr:N \l_tmpa_int
+        \__lamalunga_author_cell:nn ##1
+        \int_compare:nNnTF
+          { \int_mod:nn { \l_tmpa_int } { \l__lamalunga_cols_int } } = { 0 }
+          { \par \vskip \fib { 5 } pt }
+          { \hskip \fib { 7 } pt }
+      }
+    \par
+  }
+\cs_new_protected:Npn \__lamalunga_author_cell:nn #1 #2
+  {
+    \begin{minipage} [t] { \l__lamalunga_cell_dim }
+      \raggedright
+      { \usebeamerfont { author } \usebeamercolor [fg] { author }
+        #1 \textsuperscript { \__lamalunga_marks:n {#2} } \par }
+      { \usebeamerfont { institute } \usebeamercolor [fg] { institute }
+        \clist_map_inline:nn {#2}
+          { \prop_item:Nn \g__lamalunga_affiliation_prop {##1} \par } }
+    \end{minipage}
+  }
+
+% Logos: \addlogo{file}; on the title page they stand in a row in the
+% upper right corner, which the spiral leaves free, all with the same area, that of a golden
+% rectangle 21 pt high, so that a wide logo does not outweigh a square one
+\seq_new:N \g__lamalunga_logos_seq
+\NewDocumentCommand \addlogo { m }
+  { \seq_gput_right:Nn \g__lamalunga_logos_seq {#1} }
+\box_new:N \l__lamalunga_logo_box
+\cs_new_protected:Npn \__lamalunga_logo:n #1
+  {
+    \hbox_set:Nn \l__lamalunga_logo_box { \includegraphics {#1} }
+    \includegraphics
+      [
+        height = \fp_eval:n
+          {
+            \fib { 8 } * sqrt( \c_lamalunga_phi_fp
+              * \box_ht:N \l__lamalunga_logo_box
+              / \box_wd:N \l__lamalunga_logo_box )
+          } pt
+      ] {#1}
+  }
+\cs_new_protected:Npn \lamalunga@logos
+  {
+    \seq_if_empty:NF \g__lamalunga_logos_seq
+      {
+        \begin{tikzpicture} [ remember~picture , overlay ]
+          \node [ anchor = north~east , inner~sep = 0pt ] at
+            ( [ shift = { ( - \lamalungahmargin , - \lamalungavmargin ) } ]
+              current~page.north~east )
+            {
+              \seq_map_inline:Nn \g__lamalunga_logos_seq
+                { \hspace { \fib { 8 } pt } \__lamalunga_logo:n {##1} }
+            } ;
+        \end{tikzpicture}
+      }
+  }
+
+% the rule above the notes: phi^-2 of the text width, a hairline in a tint
+% of the primary
+\cs_set_protected:Npn \footnoterule
+  {
+    \kern - \fib { 4 } pt
+    { \color { lamalunga-primary-t3 }
+      \hrule width \goldenminor { \textwidth } height \lamalungahairline }
+    \kern \fib { 4 } pt
+  }
+
+% ---------------------------------------------------------------------------
 % Title page: the page is a golden rectangle; the title sits in its first
 % square, the spiral turns in the rest
 % ---------------------------------------------------------------------------
@@ -62,7 +206,11 @@
 \setbeamertemplate { title~page }
   {
     \bool_if:NT \g_lamalunga_spiral_bool { \lamalunga@titlespiral }
-    \bool_if:NTF \g_lamalunga_spiral_bool
+    \lamalunga@logos
+    % the title block fills the first square of the spiral, or the whole
+    % text width when there is no spiral or more than four authors
+    \bool_lazy_and:nnTF { \g_lamalunga_spiral_bool }
+      { \int_compare_p:nNn { \seq_count:N \g__lamalunga_authors_seq } < { 5 } }
       {
         \dim_set:Nn \l__lamalunga_title_dim
           {
@@ -73,7 +221,11 @@
               }
           }
       }
-      { \dim_set:Nn \l__lamalunga_title_dim { \goldenmajor { \textwidth } } }
+      {
+        \int_compare:nNnTF { \seq_count:N \g__lamalunga_authors_seq } > { 4 }
+          { \dim_set:Nn \l__lamalunga_title_dim { \textwidth } }
+          { \dim_set:Nn \l__lamalunga_title_dim { \goldenmajor { \textwidth } } }
+      }
     \begin{minipage} [t] { \l__lamalunga_title_dim }
       \raggedright
       {
@@ -92,9 +244,13 @@
       { \usebeamercolor [fg] { title~rule }
         \rule { \goldenminor { \linewidth } } { \lamalungabarheight } \par }
       \vskip \fib { 7 } pt
-      \tl_if_empty:NF \insertauthor
-        { { \usebeamerfont { author } \usebeamercolor [fg] { author }
-            \insertauthor \par } }
+      \seq_if_empty:NTF \g__lamalunga_authors_seq
+        {
+          \tl_if_empty:NF \insertauthor
+            { { \usebeamerfont { author } \usebeamercolor [fg] { author }
+                \insertauthor \par } }
+        }
+        { \__lamalunga_author_grid: }
       \tl_if_empty:NF \insertinstitute
         {
           \vskip \fib { 4 } pt
@@ -364,6 +520,31 @@
     \cs_if_exist:NTF \insertbiblabel
       { \insertbiblabel }
       { \__lamalunga_square:n { \goldenpower { -3 } em } }
+  }
+
+% ---------------------------------------------------------------------------
+% Unmarked notes: \slidenote{text} and, with biblatex, \slidecite{key}
+% (author, title, year) at the foot of the frame, flush left, in the small
+% print and in the muted ink, with no mark in the text
+% ---------------------------------------------------------------------------
+
+\NewDocumentCommand \slidenote { m }
+  {
+    \group_begin:
+      \setbeamertemplate { footnote }
+        {
+          \parindent 0pt \raggedright
+          \usebeamerfont { footnote } \usebeamercolor [fg] { footnote }
+          \insertfootnotetext \par
+        }
+      \footnotetext {#1}
+    \group_end:
+  }
+\NewDocumentCommand \slidecite { m }
+  {
+    \cs_if_exist:NTF \citeauthor
+      { \slidenote { \citeauthor {#1} ,~ \citetitle {#1} ,~ \citeyear {#1} } }
+      { \slidenote { \cite {#1} } }
   }
 
 % ---------------------------------------------------------------------------

@@ -97,6 +97,16 @@ FIGURES = {
         ("guides=both", "guides=both"),
     ]),
     "image": ("image", [("", "")]),
+    "authors": ("title,notes", [("", "")],
+                "\\institute{}"
+                "\\addaffiliation{aes}{Analytical Engine Society}"
+                "\\addaffiliation{cam}{University of Cambridge}"
+                "\\addaffiliation{ucl}{University College London}"
+                "\\addauthor{Ada Lovelace}{aes}"
+                "\\addauthor{Charles Babbage}{aes,cam}"
+                "\\addauthor{Augustus De Morgan}{ucl}"
+                "\\addlogo{example-image-16x9}\\addlogo{example-image-1x1}"
+                "\\addlogo{example-image-10x16}"),
     "fonts": ("title", [
         ("font=plex", "font=plex"),
         ("font=source", "font=source"),
@@ -122,10 +132,10 @@ def sources_digest():
     return digest.hexdigest()[:12]
 
 
-def compile_row(work, name, frames, options):
+def compile_row(work, name, frames, options, extra=""):
     """Compile the sample with the given options, return the page images;
     a row whose sources and options did not change is not compiled again."""
-    key = hashlib.sha1((SOURCES + frames + options).encode()).hexdigest()[:12]
+    key = hashlib.sha1((SOURCES + frames + options + extra).encode()).hexdigest()[:12]
     name = name + "-" + key
     cached = sorted(glob.glob(os.path.join(work, name + "-*.png")))
     if cached:
@@ -139,7 +149,7 @@ def compile_row(work, name, frames, options):
         f.write(text)
     env = dict(os.environ, TEXINPUTS=ROOT + "//:")
     command = ("\\def\\galleryoptions{%s}\\def\\galleryframes{%s}"
-               "\\input{sample}" % (options, frames))
+               "\\def\\galleryextra{%s}\\input{sample}" % (options, frames, extra))
     for _ in range(3):
         run = subprocess.run(
             ["lualatex", "-interaction=nonstopmode", "-halt-on-error",
@@ -165,9 +175,10 @@ def label_font():
 
 
 def build(figure):
-    frames, rows = FIGURES[figure]
+    frames, rows = FIGURES[figure][:2]
+    extra = FIGURES[figure][2] if len(FIGURES[figure]) > 2 else ""
     os.makedirs(CACHE, exist_ok=True)
-    pages = [compile_row(CACHE, "%s%d" % (figure, i), frames, options)
+    pages = [compile_row(CACHE, "%s%d" % (figure, i), frames, options, extra)
              for i, (_, options) in enumerate(rows)]
     # a figure of one frame per set of options is laid out as a grid of
     # cells, each with its label; otherwise one labelled row per set

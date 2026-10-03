@@ -88,7 +88,17 @@
             \usebeamerfont { frametitle }
             \raggedright
             \str_if_eq:VnTF \g_lamalunga_titles_tl { boxed }
-              { \lamalunga_highlight_lines:nV { lamalunga-primary } \insertframetitle }
+              {
+                % the title as written (\insertframetitle wraps it in a
+                % test for the continuation, which must not be split)
+                \tl_set_eq:NN \l_tmpa_tl \beamer@frametitle
+                \int_compare:nNnT { \beamer@autobreakcount } > { 1 }
+                  {
+                    \tl_put_right:Nn \l_tmpa_tl
+                      { ~ { \usebeamertemplate* { frametitle~continuation } } }
+                  }
+                \lamalunga_highlight_lines:nV { lamalunga-primary } \l_tmpa_tl
+              }
               { \insertframetitle \par }
             \tl_if_empty:NF \insertframesubtitle
               {

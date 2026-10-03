@@ -152,6 +152,9 @@ in parentheses describes the options that control it.
   and the words that matter in boxes filled with the colors of the harmony, in
   the ink that contrasts more with each fill; a consequence can be added flush
   right, after an arrow in the accent (`\hence`).
+- **Logos of equal weight.** Logos are scaled to the same area (that of a
+  golden rectangle 21 pt high) rather than to the same height, since a wide
+  and low logo would otherwise outweigh a square one.
 - **Golden weights.** The bold of each family is the weight whose stems are
   closest to φ times those of the regular one: for IBM Plex Sans the
   SemiBold, whose stems measure 1.594 times the regular ones (within 1.5% of
@@ -363,6 +366,9 @@ are not numbered.
 | `\begin{frame}[golden]` | the content of any frame at the golden section of the free height |
 | `\begin{goldencolumns}[major\|minor] ... \nextcolumn ... \end{goldencolumns}` | two columns of 61.8% and 38.2% of the width, the major first unless `minor` is given |
 | `\highlight[role]{text}` | the text, in bold, in a box of a color of the palette (`primary`, `accent`, `accent2`, `complement`, `triad-a`, `split-b`, and so on, or any xcolor name), in the ink of higher contrast; the default is the first accent |
+| `\addaffiliation{key}{text}`, `\addauthor{name}{keys}` | authors in a grid on the title page, each with the marks († ‡ § ¶) of its affiliations, which follow in the small print; the short author becomes "first author et al." |
+| `\addlogo{file}` | logos in a row in the upper right corner of the title page, which the spiral leaves free, all with the area of a golden rectangle 21 pt high |
+| `\slidenote{text}`, `\slidecite{key}` | a note with no mark at the foot of the frame, and (with biblatex) the author, title and year of a reference |
 | `\hence{text}` | a consequence of the line above, flush right in the small print, after an arrow in the accent |
 | `\goldenimage[width]{file}` | the image scaled to cover a golden rectangle and cropped |
 | `\focalpoint[thirds\|golden]{nw\|ne\|sw\|se}{content}` | the content centerd on an intersection of the guides |
@@ -371,6 +377,8 @@ are not numbered.
 | `\lamalungaset{options}` | change options in the middle of a talk |
 
 ![A golden image](doc/img/image.png)
+
+![Authors, affiliations, logos and notes without marks](doc/img/authors.png)
 
 ## The library outside beamer
 
