@@ -80,7 +80,9 @@
     \setbeamertemplate { frametitle }
       {
         \nointerlineskip
-        \vskip \lamalungavmargin
+        % the title sits in the top margin, phi^-1 of it above
+        \vskip \fp_eval:n { round( \dim_to_decimal:n { \lamalungavmargin }
+          / \c_lamalunga_phi_fp ) } pt
         \begin{beamercolorbox} [ wd = \paperwidth ] { frametitle }
           \hspace* { \lamalungahmargin }
           \begin{minipage} [t]
@@ -106,12 +108,12 @@
                 { \usebeamerfont { framesubtitle } \usebeamercolor [fg]
                   { framesubtitle } \insertframesubtitle \par }
               }
-            \vskip \fib { 5 } pt
+            \vskip \fib { 4 } pt
             \str_if_eq:VnT \g_lamalunga_progressbar_tl { frametitle }
               { \lamalungaprogressbar { \linewidth } }
           \end{minipage}
         \end{beamercolorbox}
-        \vskip \fib { 6 } pt
+        \vskip \fib { 5 } pt
       }
 
     \str_if_eq:VnT \g_lamalunga_headline_tl { none }

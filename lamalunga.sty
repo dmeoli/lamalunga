@@ -39,8 +39,10 @@
 \tl_gset:Nn \g_lamalunga_dark_ink_tl { black }
 \tl_gset:Nn \g_lamalunga_light_ink_tl { white }
 \fp_gset_eq:NN \g_lamalunga_ratio_fp \c_lamalunga_phi_fp
-\fp_gset:Nn \g_lamalunga_leading_fp { 1 + \c_lamalunga_phi_fp ^ (-2) }
-\fp_gset:Nn \g_lamalunga_display_leading_fp { 1 + \c_lamalunga_phi_fp ^ (-3) }
+% leadings: 1 + phi^-3 for the body (as dense as a slide needs, and the
+% leading of beamer itself), 1 + phi^-4 for display sizes
+\fp_gset:Nn \g_lamalunga_leading_fp { 1 + \c_lamalunga_phi_fp ^ (-3) }
+\fp_gset:Nn \g_lamalunga_display_leading_fp { 1 + \c_lamalunga_phi_fp ^ (-4) }
 \tl_gset:Nn \g_lamalunga_wheel_tl { twheel }
 
 % Hook run after every \lamalungaset; the beamer theme uses it to recompute

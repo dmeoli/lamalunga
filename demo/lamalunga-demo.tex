@@ -50,7 +50,7 @@
     The page measures \inmm{\paperwidth} by \inmm{\paperheight}, i.e., a
     ratio of
     \(\pgfmathparse{\paperwidth/\paperheight}\pgfmathprintnumber[precision=4]{\pgfmathresult}\),
-    and the margins are \fib{9}\,pt and \fib{8}\,pt,
+    and the margins are \fib{8}\,pt and \fib{7}\,pt,
     two consecutive Fibonacci numbers: since their ratio is again
     \(\varphi\), the block of text is a golden rectangle as well.
     \nextcolumn
@@ -90,7 +90,8 @@
     step & size (pt) & used for \\
     \midrule
     \(2\)   & \modularscale{2}    & title, section pages, standout \\
-    \(1\)   & \modularscale{1}    & frame titles, subtitles \\
+    \(1\)   & \modularscale{1}    & subtitles \\
+    \(1/2\) & \modularscale{0.5}  & frame titles \\
     \(0\)   & \modularscale{0}    & text, block titles \\
     \(-1/2\) & \modularscale{-0.5} & foot line, captions, footnotes \\
     \bottomrule

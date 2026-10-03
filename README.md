@@ -84,16 +84,17 @@ in parentheses describes the options that control it.
 - **Fibonacci spacing.** Margins, gutters, paddings and vertical skips are
   Fibonacci numbers of points (3, 5, 8, 13, 21, 34, 55), computed by Binet's
   formula; as consecutive ones are in a ratio close to φ, the two margins are
-  34 pt and 21 pt.
+  21 pt and 13 pt by default.
 - **A modular scale of type.** Each size is the base size times a power of a
   ratio (φ by default, or a musical interval: minor third 6/5, major third
   5/4, fourth 4/3, fifth 3/2, octave 2), with half steps for the small print;
   the half step of the golden scale, √φ, is the ratio of the sides of the
   Kepler triangle. The size commands of LaTeX (`\small`, `\Large`, and so
   on) are moved onto the same scale.
-- **Golden leading.** Body text has a leading of 1 + φ⁻² ≈ 1.382 times its
-  size and display sizes of 1 + φ⁻³ ≈ 1.236, since large type usually needs
-  less air between the lines.
+- **Golden leading.** Body text has a leading of 1 + φ⁻³ ≈ 1.236 times its
+  size (as dense as a slide needs, and incidentally the leading of beamer
+  itself) and display sizes of 1 + φ⁻⁴ ≈ 1.146, since large type usually
+  needs less air between the lines.
 - **Optical center.** The eye tends to place the center of a page a little
   above the geometric one; hence title, section and standout pages (and any frame with the
   option `golden`) leave 38.2% of the free height above their content and
@@ -264,7 +265,8 @@ the one of the beamer class option `aspectratio` (e.g., 16:9 with
 ### `margins=narrow|normal|wide`
 
 Two consecutive Fibonacci numbers for the vertical and the horizontal margin:
-13 pt and 21 pt, 21 pt and 34 pt (default), 34 pt and 55 pt.
+13 pt and 21 pt (default, the density a talk needs), 21 pt and 34 pt, 34 pt and
+55 pt (the empty space of the nordic, classical and japandi styles).
 
 ![Narrow, normal and wide margins](doc/img/margins.png)
 
@@ -272,10 +274,10 @@ Two consecutive Fibonacci numbers for the vertical and the horizontal margin:
 
 The ratio of the modular scale (`golden`, `minorthird`, `majorthird`,
 `fourth`, `fifth`, `octave`, or a number) and the two leadings, as factors of
-the size (defaults 1.382 and 1.236). The base of the scale is the size of the
+the size (defaults 1.236 and 1.146). The base of the scale is the size of the
 class (the option `11pt` of beamer is in fact 10.95 pt); with it and the
-golden ratio, frame titles are 17.72 pt, titles 28.67 pt and the small print
-8.61 pt, each size being φ times the previous one. The size commands of LaTeX
+golden ratio, frame titles are 13.93 pt (a half step, √φ times the text),
+titles 28.67 pt and the small print 8.61 pt. The size commands of LaTeX
 are moved onto the same scale, in quarter steps where the classic sizes are
 closer than a half step, so that a `\small` or a `\Large` written in the
 document is a power of the ratio as well:
