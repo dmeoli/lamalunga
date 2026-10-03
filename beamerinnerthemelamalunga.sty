@@ -155,7 +155,9 @@
           }
       }
   }
-\AtBeginSection { \lamalunga@sectionframe }
+% nothing for \section* (biblatex uses it inside the frame of the
+% bibliography), and never a frame inside a frame
+\AtBeginSection [ ] { \ifbeamer@inframe \else \lamalunga@sectionframe \fi }
 
 \setbeamertemplate { section~in~toc }
   {
@@ -355,7 +357,14 @@
 
 \setbeamertemplate { caption } [ numbered ]
 \setbeamertemplate { caption~label~separator } { .~ }
-\setbeamertemplate { bibliography~item } [ text ]
+% bibliography: the label where the style gives one (bibtex, numeric
+% styles), otherwise the golden square of the lists (biblatex, author-year)
+\setbeamertemplate { bibliography~item }
+  {
+    \cs_if_exist:NTF \insertbiblabel
+      { \insertbiblabel }
+      { \__lamalunga_square:n { \goldenpower { -3 } em } }
+  }
 
 % ---------------------------------------------------------------------------
 % Golden columns: \begin{goldencolumns}[major|minor] ... \nextcolumn ...
