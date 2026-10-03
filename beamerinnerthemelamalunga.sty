@@ -53,7 +53,7 @@
           { \fp_to_dim:n
               { ( \paperwidth - \c_lamalunga_phi_fp * \l__lamalunga_spiral_dim ) / 2 } }
           { 0pt } { \l__lamalunga_spiral_dim } { 10 }
-          { draw = spiral.bg , line~width = 0.4pt }
+          { draw = spiral.bg , line~width = \lamalungahairline }
           { draw = spiral.fg , line~width = \lamalungabarheight }
       \end{scope}
     \end{tikzpicture}
@@ -212,7 +212,7 @@
 
 \cs_new_protected:Npn \lamalunga@blockbegin #1
   {
-    \par \vskip \medskipamount
+    \par \vskip \fib { 6 } pt
     \str_if_eq:VnTF \g_lamalunga_blocks_tl { rule }
       {
         \begin{lrbox} { \lamalunga@blockbox }
@@ -249,7 +249,7 @@
           }
         \usebeamerfont { block~body #1 }
         \begin{beamercolorbox} [ colsep* = \fib { 5 } pt , vmode ] { block~body #1 }
-          \vskip -0.25ex \vbox { }
+          \vskip - \goldenpower { -3 } ex \vbox { }
   }
 \cs_new_protected:Npn \lamalunga@blockend #1
   {
@@ -270,7 +270,7 @@
           { \end{beamerboxesrounded} }
           { \end{beamercolorbox} }
       }
-    \vskip \smallskipamount
+    \vskip \fib { 4 } pt
   }
 
 \setbeamertemplate { block~begin } { \lamalunga@blockbegin { } }
@@ -291,7 +291,8 @@
       { \rule { #1 } { #1 } }
   }
 % Bauhaus bullets: square, circle and triangle of equal area (so that no
-% shape outweighs the others), in the primary and the two accents
+% shape outweighs the others), in the primary and the two accents; the area
+% shrinks by phi at each level
 \cs_new_protected:Npn \__lamalunga_bauhaus:nn #1 #2
   {
     \fp_set:Nn \l_tmpa_fp { #1 * \c_lamalunga_phi_fp ^ (-2) }
@@ -330,9 +331,9 @@
       {
         \setbeamertemplate { itemize~item } { \__lamalunga_bauhaus:nn { 1 } { square } }
         \setbeamertemplate { itemize~subitem }
-          { \__lamalunga_bauhaus:nn { 0.8 } { circle } }
+          { \__lamalunga_bauhaus:nn { \goldenpower { -0.5 } } { circle } }
         \setbeamertemplate { itemize~subsubitem }
-          { \__lamalunga_bauhaus:nn { 0.7 } { triangle } }
+          { \__lamalunga_bauhaus:nn { \goldenpower { -1 } } { triangle } }
       }
       {
         \setbeamertemplate { itemize~item }

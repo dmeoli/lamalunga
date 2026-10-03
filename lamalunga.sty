@@ -122,8 +122,14 @@
   }
 % \modularsize{k}: the font size command, with the leading of the scale
 % (body leading up to step 1/2, display leading above)
+% (the leading is divided by \baselinestretch, which \selectfont applies
+% again, so that the leading of the scale is the one obtained)
 \NewDocumentCommand \modularsize { m }
-  { \fontsize { \modularscale {#1} pt } { \modularleading {#1} pt } \selectfont }
+  {
+    \fontsize { \modularscale {#1} pt }
+      { \fp_eval:n { round( \modularleading {#1} / \baselinestretch , 3 ) } pt }
+    \selectfont
+  }
 
 % ---------------------------------------------------------------------------
 % Colors: harmonies by rotation of the hue, golden tints and shades

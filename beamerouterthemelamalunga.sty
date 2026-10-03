@@ -211,7 +211,8 @@
 \cs_new_protected:Npn \lamalunga@guides #1 #2
   {
     \fp_set:Nn \l_tmpa_fp {#1}
-    \draw [ lamalunga-accent-vivid , opacity = 0.618 , line~width = 0.4pt , #2 ]
+    \draw [ lamalunga-accent-vivid , opacity = \fp_eval:n { round( 1 / \c_lamalunga_phi_fp , 3 ) } ,
+            line~width = \lamalungahairline , #2 ]
       ( \fp_use:N \l_tmpa_fp \paperwidth , 0 ) -- ++ ( 0 , \paperheight )
       ( \fp_eval:n { 1 - \l_tmpa_fp } \paperwidth , 0 ) -- ++ ( 0 , \paperheight )
       ( 0 , \fp_use:N \l_tmpa_fp \paperheight ) -- ++ ( \paperwidth , 0 )

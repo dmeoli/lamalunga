@@ -4,7 +4,7 @@
 > Apulia, where on 3 October 1993 a group of speleologists found the Altamura
 > Man, a Neanderthal skeleton of about 150000 years ago, still held in the
 > calcite of the cave
-> ([uomodialtamura.it](https://www.uomodialtamura.it/Centro-Visite-Lamalunga/3)).
+> ([uomodialtamura.it](https://uomodialtamura.it/index.aspx?lang=ENG)).
 
 A beamer theme, and a small LaTeX library, in which the proportions of the
 page come from the golden ratio and the palette is computed from a single
@@ -89,7 +89,8 @@ in parentheses describes the options that control it.
   ratio (φ by default, or a musical interval: minor third 6/5, major third
   5/4, fourth 4/3, fifth 3/2, octave 2), with half steps for the small print;
   the half step of the golden scale, √φ, is the ratio of the sides of the
-  Kepler triangle.
+  Kepler triangle. The size commands of LaTeX (`\small`, `\Large`, and so
+  on) are moved onto the same scale.
 - **Golden leading.** Body text has a leading of 1 + φ⁻² ≈ 1.382 times its
   size and display sizes of 1 + φ⁻³ ≈ 1.236, since large type usually needs
   less air between the lines.
@@ -134,7 +135,8 @@ in parentheses describes the options that control it.
   option.
 - **Forms in proportion.** Bullets are squares whose side shrinks by φ at each
   level, or the square, circle and triangle of the Bauhaus with equal areas
-  (so that no shape outweighs the others); lines are a hairline of φ⁻² pt or a
+  (so that no shape outweighs the others) and an area that shrinks by φ at
+  each level; capitals are letterspaced by φ⁻⁶ of the em; lines are a hairline of φ⁻² pt or a
   rule of φ pt; the padding of a highlight is φ times wider than it is tall;
   corners are square or rounded with a radius of φ⁻³ em; images are cropped to
   a golden rectangle.
@@ -258,8 +260,20 @@ Two consecutive Fibonacci numbers for the vertical and the horizontal margin:
 The ratio of the modular scale (`golden`, `minorthird`, `majorthird`,
 `fourth`, `fifth`, `octave`, or a number) and the two leadings, as factors of
 the size (defaults 1.382 and 1.236). The base of the scale is the size of the
-class (10, 11 or 12 pt); with 11 pt and the golden ratio, frame titles are
-17.8 pt, titles 28.8 pt and the small print 8.6 pt.
+class (the option `11pt` of beamer is in fact 10.95 pt); with it and the
+golden ratio, frame titles are 17.72 pt, titles 28.67 pt and the small print
+8.61 pt, each size being φ times the previous one. The size commands of LaTeX
+are moved onto the same scale, in quarter steps where the classic sizes are
+closer than a half step, so that a `\small` or a `\Large` written in the
+document is a power of the ratio as well:
+
+| command | step | size (pt) | | command | step | size (pt) |
+|---|---|---|---|---|---|---|
+| `\tiny` | −3/2 | 5.32 | | `\large` | 1/4 | 12.35 |
+| `\scriptsize` | −1 | 6.77 | | `\Large` | 1/2 | 13.93 |
+| `\footnotesize` | −1/2 | 8.61 | | `\LARGE` | 1 | 17.72 |
+| `\small` | −1/4 | 9.71 | | `\huge` | 3/2 | 22.54 |
+| `\normalsize` | 0 | 10.95 | | `\Huge` | 2 | 28.67 |
 
 ## Typography
 

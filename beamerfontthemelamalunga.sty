@@ -171,8 +171,12 @@
 
 % Optical margin alignment and, for all-capitals, letterspacing
 \RequirePackage [ protrusion = true , tracking = true ] { microtype }
+% capitals letterspaced by phi^{-6} of the em, about 5.6%
 \NewDocumentCommand \lamalungacaps { m }
-  { \textls [ 80 ] { \MakeUppercase {#1} } }
+  {
+    \textls [ \fp_eval:n { round( 1000 * \c_lamalunga_phi_fp ^ (-6) ) } ]
+      { \MakeUppercase {#1} }
+  }
 \NewDocumentCommand \lamalungalight { }
   { \exp_args:NV \fontseries \g__lamalunga_display_series_tl \selectfont }
 
@@ -188,8 +192,23 @@
 \selectfont
 
 % ---------------------------------------------------------------------------
-% Sizes: base * ratio^k, with half steps (k + 1/2) for small print
+% Sizes: base * ratio^k, with half steps (k + 1/2) for small print. The size
+% commands of LaTeX are moved onto the same scale (in quarter steps where
+% the classic sizes are closer than a half step), so that a \small or a
+% \Large in the document is a power of the ratio as well:
+%   \tiny -3/2  \scriptsize -1  \footnotesize -1/2  \small -1/4
+%   \large 1/4  \Large 1/2  \LARGE 1  \huge 3/2  \Huge 2
 % ---------------------------------------------------------------------------
+
+\cs_set_protected:Npn \tiny { \modularsize { -1.5 } }
+\cs_set_protected:Npn \scriptsize { \modularsize { -1 } }
+\cs_set_protected:Npn \footnotesize { \modularsize { -0.5 } }
+\cs_set_protected:Npn \small { \modularsize { -0.25 } }
+\cs_set_protected:Npn \large { \modularsize { 0.25 } }
+\cs_set_protected:Npn \Large { \modularsize { 0.5 } }
+\cs_set_protected:Npn \LARGE { \modularsize { 1 } }
+\cs_set_protected:Npn \huge { \modularsize { 1.5 } }
+\cs_set_protected:Npn \Huge { \modularsize { 2 } }
 
 \cs_new_protected:Npn \lamalunga@fonts
   {
