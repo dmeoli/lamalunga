@@ -59,9 +59,13 @@ FIGURES = {
         ("contrast=AA", "contrast=AA,primary=9B7FD4"),
         ("contrast=AAA", "contrast=AAA,primary=9B7FD4"),
     ]),
+    "weight": ("title,content", [
+        ("weight=bold", "weight=bold"),
+        ("weight=light", "weight=light"),
+    ]),
     "titles": ("title,content", [
-        ("titles=plain", "titles=plain"),
-        ("titles=boxed, alerts=boxed", "titles=boxed,alerts=boxed"),
+        ("titles=boxed, alerts=bold", "titles=boxed,alerts=bold"),
+        ("titles=plain, alerts=color", "titles=plain,alerts=color"),
     ]),
     "blocks": ("blocks", [
         ("blocks=tinted", "blocks=tinted"),

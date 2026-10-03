@@ -39,6 +39,7 @@
 \tl_new:N \g_lamalunga_font_tl
 \tl_new:N \g_lamalunga_math_tl
 \tl_new:N \g_lamalunga_titles_tl
+\tl_new:N \g_lamalunga_weight_tl
 \tl_new:N \g_lamalunga_alerts_tl
 \tl_new:N \g_lamalunga_bullets_tl
 \tl_new:N \g_lamalunga_contrast_tl
@@ -60,8 +61,9 @@
 \tl_gset:Nn \g_lamalunga_guides_tl { none }
 \tl_gset:Nn \g_lamalunga_font_tl { plex }
 \tl_gset:Nn \g_lamalunga_math_tl { auto }
-\tl_gset:Nn \g_lamalunga_titles_tl { plain }
-\tl_gset:Nn \g_lamalunga_alerts_tl { color }
+\tl_gset:Nn \g_lamalunga_titles_tl { boxed }
+\tl_gset:Nn \g_lamalunga_weight_tl { bold }
+\tl_gset:Nn \g_lamalunga_alerts_tl { bold }
 \tl_gset:Nn \g_lamalunga_bullets_tl { golden }
 \tl_gset:Nn \g_lamalunga_contrast_tl { AA }
 \tl_gset:Nn \g_lamalunga_style_tl { lamalunga }
@@ -95,7 +97,8 @@
 \__lamalunga_choice:nn { blocks } { tinted , rule }
 \__lamalunga_choice:nn { guides } { none , thirds , golden , both }
 \__lamalunga_choice:nn { titles } { plain , boxed }
-\__lamalunga_choice:nn { alerts } { color , boxed }
+\__lamalunga_choice:nn { alerts } { bold , color , boxed }
+\__lamalunga_choice:nn { weight } { bold , light }                  % preamble
 \__lamalunga_choice:nn { bullets } { golden , bauhaus }
 \__lamalunga_choice:nn { font }                                     % preamble
   { plex , source , heros , adventor , garamond , libertinus , none }
@@ -110,15 +113,15 @@
     style / lamalunga .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 7A52C0 , font = plex , harmony = complementary ,
-          mode = light , canvas = tinted , titles = plain , alerts = color ,
+          primary = 7A52C0 , font = plex , weight = bold , harmony = complementary ,
+          mode = light , canvas = tinted , titles = boxed , alerts = bold ,
           bullets = golden , corners = square , blocks = tinted ,
           margins = normal , spiral = true
         } ,
     style / bauhaus .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = BE1E2D , font = adventor , harmony = triadic ,
+          primary = BE1E2D , font = adventor , weight = bold , harmony = triadic ,
           mode = light , canvas = white , titles = boxed , alerts = boxed ,
           bullets = bauhaus , corners = square , blocks = rule ,
           margins = normal , spiral = false
@@ -126,15 +129,15 @@
     style / swiss .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = D52B1E , font = heros , harmony = monochromatic ,
-          mode = light , canvas = white , titles = plain , alerts = color ,
+          primary = D52B1E , font = heros , weight = bold , harmony = monochromatic ,
+          mode = light , canvas = white , titles = plain , alerts = bold ,
           bullets = golden , corners = square , blocks = rule ,
           margins = narrow , spiral = false
         } ,
     style / nordic .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 4F6D7A , font = source , harmony = analogous ,
+          primary = 4F6D7A , font = source , weight = light , harmony = analogous ,
           mode = paper , canvas = tinted , titles = plain , alerts = color ,
           bullets = golden , corners = rounded , blocks = tinted ,
           margins = normal , spiral = false
@@ -142,7 +145,7 @@
     style / classical .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 7A1F2B , font = garamond , harmony = complementary ,
+          primary = 7A1F2B , font = garamond , weight = light , harmony = complementary ,
           mode = paper , canvas = tinted , titles = plain , alerts = color ,
           bullets = golden , corners = square , blocks = rule ,
           margins = wide , spiral = true
@@ -150,7 +153,7 @@
     style / japandi .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 6B705C , font = source , harmony = monochromatic ,
+          primary = 6B705C , font = source , weight = light , harmony = monochromatic ,
           mode = paper , canvas = tinted , titles = plain , alerts = color ,
           bullets = golden , corners = rounded , blocks = rule ,
           margins = wide , spiral = false
@@ -204,6 +207,7 @@
 \cs_gset_protected:Npn \lamalunga_after_set:
   {
     \lamalunga@colors
+    \lamalunga@fonts
     \lamalunga@templates
   }
 

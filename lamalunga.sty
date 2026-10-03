@@ -339,21 +339,45 @@
 % ---------------------------------------------------------------------------
 
 \colorlet { highlight } { black!14.6 }
+% the font of the text in a highlight (the beamer theme sets it bold)
+\tl_new:N \g_lamalunga_highlight_font_tl
 \seq_new:N \l__lamalunga_lines_seq
+\tl_new:N \l__lamalunga_fill_tl
+% a fill is a colour name, or the name of a role of the palette of the
+% theme (primary, accent, accent2, complement, triad-a, ...), which stands
+% for the colour as computed, before any adjustment for contrast
+\cs_new_protected:Npn \__lamalunga_fill:n #1
+  {
+    \str_case:nnF {#1}
+      {
+        { primary } { \tl_set:Nn \l__lamalunga_fill_tl { lamalunga-seed } }
+        { accent } { \tl_set:Nn \l__lamalunga_fill_tl { lamalunga-a1 } }
+        { accent2 } { \tl_set:Nn \l__lamalunga_fill_tl { lamalunga-a2 } }
+      }
+      {
+        \cs_if_exist:cTF { \token_to_str:N \color@ lamalunga-#1 }
+          { \tl_set:Nn \l__lamalunga_fill_tl { lamalunga-#1 } }
+          { \tl_set:Nn \l__lamalunga_fill_tl {#1} }
+      }
+  }
+\cs_new_protected:Npn \__lamalunga_readable:nnnn #1 #2 #3 #4
+  { \readableon {#1} {#2} {#3} {#4} }
+\cs_generate_variant:Nn \__lamalunga_readable:nnnn { nVVV }
 \cs_new_protected:Npn \lamalunga_highlight:nn #1 #2
   {
-    \exp_args:NnnVV \readableon { lamalunga-highlight-ink } {#1}
+    \__lamalunga_fill:n {#1}
+    \__lamalunga_readable:nVVV { lamalunga-highlight-ink } \l__lamalunga_fill_tl
       \g_lamalunga_dark_ink_tl \g_lamalunga_light_ink_tl
     \tikz [ baseline = ( lamalunga-hl.base ) ]
       \node
         [
-          fill = #1 , text = lamalunga-highlight-ink , anchor = base ,
+          fill = \l__lamalunga_fill_tl , text = lamalunga-highlight-ink , anchor = base ,
           inner~xsep = \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-3) , 4 ) } em ,
           inner~ysep = \fp_eval:n { round( \c_lamalunga_phi_fp ^ (-4) , 4 ) } em ,
           outer~sep = 0pt ,
           rounded~corners = \lamalunga_corner_radius:
         ]
-        ( lamalunga-hl ) { \vphantom { Ag } #2 } ;
+        ( lamalunga-hl ) { \g_lamalunga_highlight_font_tl \vphantom { Ag } #2 } ;
   }
 \cs_generate_variant:Nn \lamalunga_highlight:nn { nV }
 % one box per line of a title broken with \\

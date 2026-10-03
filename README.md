@@ -147,6 +147,11 @@ in parentheses describes the options that control it.
   `nordic`, `classical`, `japandi`) sets the font, the primary, the harmony,
   the mode and the forms of a coherent idiom, each of which can still be
   overridden (cf. [Styles](#styles)).
+- **Typographic accent.** The hierarchy is carried by weight and color: titles
+  and section titles are set in bold in a box of the primary, alerts in bold,
+  and the words that matter in boxes filled with the colors of the harmony, in
+  the ink that contrasts more with each fill; a consequence can be added flush
+  right, after an arrow in the accent (`\hence`).
 - **Typographic details.** These are optical margin alignment (`microtype`), figures of
   equal width in tables, letterspaced capitals (`\lamalungacaps`), one family
   for text and a mathematics that belongs to it, section numbers on two
@@ -167,10 +172,10 @@ with a different color.
 
 | style | font | primary | harmony | mode | forms |
 |---|---|---|---|---|---|
-| `lamalunga` (default) | IBM Plex Sans | `7A52C0` violet | complementary | light, tinted | golden squares, tinted blocks, spiral |
-| `bauhaus` | TeX Gyre Adventor (geometric) | `BE1E2D` red | triadic: red, yellow, blue | light, white | boxed titles and alerts, Bauhaus bullets, rule blocks |
-| `swiss` | TeX Gyre Heros (grotesque) | `D52B1E` red | monochromatic | light, white | rule blocks, narrow margins |
-| `nordic` | Source Sans (humanist) | `4F6D7A` slate | analogous | paper | rounded corners, tinted blocks |
+| `lamalunga` (default) | IBM Plex Sans, bold | `7A52C0` violet | complementary | light, tinted | boxed titles, bold alerts, golden squares, tinted blocks, spiral |
+| `bauhaus` | TeX Gyre Adventor (geometric), bold | `BE1E2D` red | triadic: red, yellow, blue | light, white | boxed titles and alerts, Bauhaus bullets, rule blocks |
+| `swiss` | TeX Gyre Heros (grotesque), bold | `D52B1E` red | monochromatic | light, white | bold alerts, rule blocks, narrow margins |
+| `nordic` | Source Sans (humanist), light | `4F6D7A` slate | analogous | paper | rounded corners, tinted blocks |
 | `classical` | EB Garamond, old-style figures | `7A1F2B` burgundy | complementary | paper | rule blocks, wide margins, spiral |
 | `japandi` | Source Sans, light | `6B705C` olive gray | monochromatic | paper | rounded corners, rule blocks, wide margins |
 
@@ -285,6 +290,14 @@ chosen by the document.
 
 ![The six families](doc/img/fonts.png)
 
+### `weight=bold|light`
+
+The weight of display text (titles, frame titles, section and standout pages):
+bold by default, or the light weight of the family, which gives a quieter
+page.
+
+![Bold and light display text](doc/img/weight.png)
+
 ### `math=auto|fira|default`
 
 With LuaLaTeX or XeLaTeX, `auto` loads `unicode-math` with the mathematics of
@@ -295,13 +308,14 @@ relies on packages which do not work with `unicode-math`.
 
 ## Forms
 
-### `titles=plain|boxed` and `alerts=color|boxed`
+### `titles=boxed|plain` and `alerts=bold|color|boxed`
 
-Boxed titles set the frame titles, the title and the section titles in a box
-of the primary; boxed alerts turn `\alert` into a highlight of the first
-accent. A title broken with `\\` gets one box per line.
+Boxed titles (the default) set the frame titles, the title and the section
+titles in a box of the primary, and a title broken with `\\` gets one box per
+line. Alerts are in the first accent and in bold by default, in the accent
+alone with `color`, or a highlight of the accent with `boxed`.
 
-![Plain and boxed titles](doc/img/titles.png)
+![Boxed and plain titles](doc/img/titles.png)
 
 ### `blocks=tinted|rule` and `corners=square|rounded`
 
@@ -343,7 +357,8 @@ are not numbered.
 | `\begin{frame}[standout]` | a frame in the primary, with its content at the golden section |
 | `\begin{frame}[golden]` | the content of any frame at the golden section of the free height |
 | `\begin{goldencolumns}[major\|minor] ... \nextcolumn ... \end{goldencolumns}` | two columns of 61.8% and 38.2% of the width, the major first unless `minor` is given |
-| `\highlight[color]{text}` | the text in a box of the color, with the ink of higher contrast (default fill: the first accent) |
+| `\highlight[role]{text}` | the text, in bold, in a box of a color of the palette (`primary`, `accent`, `accent2`, `complement`, `triad-a`, `split-b`, and so on, or any xcolor name), in the ink of higher contrast; the default is the first accent |
+| `\hence{text}` | a consequence of the line above, flush right in the small print, after an arrow in the accent |
 | `\goldenimage[width]{file}` | the image scaled to cover a golden rectangle and cropped |
 | `\focalpoint[thirds\|golden]{nw\|ne\|sw\|se}{content}` | the content centerd on an intersection of the guides |
 | `\lamalungaprogressbar{width}` | the progress bar, anywhere |

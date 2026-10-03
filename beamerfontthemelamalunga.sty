@@ -179,6 +179,13 @@
   }
 \NewDocumentCommand \lamalungalight { }
   { \exp_args:NV \fontseries \g__lamalunga_display_series_tl \selectfont }
+% the series of display text (titles, section and standout pages): bold for
+% weight = bold, the light weight of the family for weight = light
+\NewDocumentCommand \lamalungadisplay { }
+  {
+    \str_if_eq:VnTF \g_lamalunga_weight_tl { bold }
+      { \bfseries } { \lamalungalight }
+  }
 
 % ---------------------------------------------------------------------------
 % Leading: the body leading of the scale, applied to every size
@@ -213,22 +220,22 @@
 \cs_new_protected:Npn \lamalunga@fonts
   {
     \setbeamerfont { title }
-      { size = \modularsize { 2 } , series = \lamalungalight }
+      { size = \modularsize { 2 } , series = \lamalungadisplay }
     \setbeamerfont { subtitle }
-      { size = \modularsize { 1 } , series = \lamalungalight }
+      { size = \modularsize { 1 } , series = \lamalungalight , shape = \itshape }
     \setbeamerfont { author } { size = \modularsize { 0 } }
     \setbeamerfont { institute } { size = \modularsize { -0.5 } }
     \setbeamerfont { date } { size = \modularsize { -0.5 } }
     \setbeamerfont { titlegraphic } { size = \modularsize { -0.5 } }
 
     \setbeamerfont { frametitle }
-      { size = \modularsize { 1 } , series = \mdseries }
+      { size = \modularsize { 1 } , series = \lamalungadisplay }
     \setbeamerfont { framesubtitle } { size = \modularsize { 0 } }
     \setbeamerfont { section~title }
-      { size = \modularsize { 2 } , series = \lamalungalight }
+      { size = \modularsize { 2 } , series = \lamalungadisplay }
     \setbeamerfont { section~number } { size = \modularsize { 0 } }
     \setbeamerfont { standout }
-      { size = \modularsize { 2 } , series = \lamalungalight }
+      { size = \modularsize { 2 } , series = \lamalungadisplay }
 
     \setbeamerfont { block~title } { size = \modularsize { 0 } , series = \bfseries }
     \setbeamerfont { footline } { size = \modularsize { -0.5 } }
@@ -240,6 +247,13 @@
     \setbeamerfont { itemize/enumerate~subbody } { size = \modularsize { -0.5 } }
     \setbeamerfont { itemize/enumerate~subsubbody } { size = \modularsize { -0.5 } }
     \setbeamerfont { bibliography~item } { size = \modularsize { -0.5 } }
+    % the accent of the typography: alerts and highlights in bold
+    \str_if_eq:VnTF \g_lamalunga_alerts_tl { color }
+      { \setbeamerfont { alerted~text } { series = \mdseries } }
+      { \setbeamerfont { alerted~text } { series = \bfseries } }
+    \str_if_eq:VnTF \g_lamalunga_weight_tl { bold }
+      { \tl_gset:Nn \g_lamalunga_highlight_font_tl { \bfseries } }
+      { \tl_gclear:N \g_lamalunga_highlight_font_tl }
   }
 \lamalunga@fonts
 

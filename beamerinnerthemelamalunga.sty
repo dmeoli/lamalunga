@@ -367,6 +367,21 @@
   }
 
 % ---------------------------------------------------------------------------
+% Consequences: \hence{text} sets, flush right and in the small print, an
+% arrow in the accent followed by the remark, under the line it comments
+% ---------------------------------------------------------------------------
+
+\NewDocumentCommand \hence { m }
+  {
+    \par
+    {
+      \raggedleft \modularsize { -0.5 }
+      { \color { lamalunga-accent } \bfseries \ensuremath { \Rightarrow } } \enspace
+      { \color { lamalunga-muted } \itshape #1 } \par
+    }
+  }
+
+% ---------------------------------------------------------------------------
 % Golden columns: \begin{goldencolumns}[major|minor] ... \nextcolumn ...
 % \end{goldencolumns}, the first column being the major (61.8%) or the
 % minor (38.2%) part of the text width, the gutter a Fibonacci number
