@@ -12,7 +12,7 @@ jobs:
       - name: Compile the demos with LuaLaTeX
         uses: xu-cheng/latex-action@v3
         env:
-          TEXINPUTS: ..//:
+          TEXINPUTS: "..//:"
         with:
           root_file: |
             lamalunga-demo.tex
@@ -22,7 +22,7 @@ jobs:
       - name: Compile the demo with pdfLaTeX
         uses: xu-cheng/latex-action@v3
         env:
-          TEXINPUTS: ..//:
+          TEXINPUTS: "..//:"
         with:
           root_file: lamalunga-demo.tex
           working_directory: demo
