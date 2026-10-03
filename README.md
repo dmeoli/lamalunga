@@ -152,6 +152,11 @@ in parentheses describes the options that control it.
   and the words that matter in boxes filled with the colors of the harmony, in
   the ink that contrasts more with each fill; a consequence can be added flush
   right, after an arrow in the accent (`\hence`).
+- **Golden weights.** The bold of each family is the weight whose stems are
+  closest to φ times those of the regular one: for IBM Plex Sans the
+  SemiBold, whose stems measure 1.594 times the regular ones (within 1.5% of
+  φ, whereas the Bold gives 1.84), and for Source Sans the Semibold (1.42,
+  against 1.88 for the Bold); TeX Gyre Heros and Adventor have a single bold.
 - **Typographic details.** These are optical margin alignment (`microtype`), figures of
   equal width in tables, letterspaced capitals (`\lamalungacaps`), one family
   for text and a mathematics that belongs to it, section numbers on two
