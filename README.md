@@ -157,10 +157,12 @@ in parentheses describes the options that control it.
   golden rectangle 21 pt high) rather than to the same height, since a wide
   and low logo would otherwise outweigh a square one.
 - **Golden weights.** The bold of each family is the weight whose stems are
-  closest to φ times those of the regular one: for IBM Plex Sans the
-  SemiBold, whose stems measure 1.594 times the regular ones (within 1.5% of
-  φ, whereas the Bold gives 1.84), and for Source Sans the Semibold (1.42,
-  against 1.88 for the Bold); TeX Gyre Heros and Adventor have a single bold.
+  closest to φ times those of the regular one: for Open Sans the SemiBold
+  (1.40, against 1.85 for the Bold), whose Light is moreover 0.60 times the
+  regular, close to φ⁻¹; for IBM Plex Sans the SemiBold, whose stems measure
+  1.594 times the regular ones (within 1.5% of φ, whereas the Bold gives
+  1.84); for Source Sans the Semibold (1.42, against 1.88 for the Bold); TeX
+  Gyre Heros and Adventor have a single bold.
 - **Typographic details.** These are optical margin alignment (`microtype`), figures of
   equal width in tables, letterspaced capitals (`\lamalungacaps`), one family
   for text and a mathematics that belongs to it, section numbers on two
@@ -181,7 +183,7 @@ with a different color.
 
 | style | font | primary | harmony | mode | forms |
 |---|---|---|---|---|---|
-| `lamalunga` (default) | IBM Plex Sans, bold | `7A52C0` violet | complementary | light, tinted | boxed titles, bold alerts, golden squares, tinted blocks, spiral |
+| `lamalunga` (default) | Open Sans, bold | `7A52C0` violet | complementary | light, tinted | boxed titles, bold alerts, golden squares, tinted blocks, spiral |
 | `bauhaus` | TeX Gyre Adventor (geometric), bold | `BE1E2D` red | triadic: red, yellow, blue | light, white | boxed titles and alerts, Bauhaus bullets, rule blocks |
 | `swiss` | TeX Gyre Heros (grotesque), bold | `D52B1E` red | monochromatic | light, white | bold alerts, rule blocks, narrow margins |
 | `nordic` | Source Sans (humanist), light | `4F6D7A` slate | analogous | paper | rounded corners, tinted blocks |
@@ -292,7 +294,7 @@ document is a power of the ratio as well:
 
 ## Typography
 
-### `font=plex|source|heros|adventor|garamond|libertinus|none`
+### `font=opensans|plex|source|heros|adventor|garamond|libertinus|none`
 
 This is the family of the text, with IBM Plex Mono for code in all cases;
 large sizes use the light weight where the family has one. `none` keeps the fonts
@@ -421,8 +423,8 @@ make gallery    # rebuild the images of the README
 make install    # copy the .sty files to TEXMFHOME
 ```
 
-The fonts are the ones of TeX Live (IBM Plex, Source Sans, TeX Gyre, EB
-Garamond, Libertinus, Fira Math), and a full TeX Live installation
+The fonts are the ones of TeX Live (Open Sans, IBM Plex, Source Sans, TeX
+Gyre, EB Garamond, Libertinus, Fira Math), and a full TeX Live installation
 needs no other font.
 
 ## The name

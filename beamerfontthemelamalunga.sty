@@ -18,11 +18,13 @@
 
 % ---------------------------------------------------------------------------
 % Families. The bold of each family is the weight whose stems are closest to
-% phi times those of the regular (IBM Plex Sans: SemiBold, 1.594; Source
-% Sans: Semibold, 1.42, the Bold giving 1.84 and 1.88). Each one comes with the mathematics that belongs to it (math =
+% phi times those of the regular (Open Sans: SemiBold, 1.40, against 1.85
+% for the Bold, and its Light is 0.60, close to phi^-1; IBM Plex Sans:
+% SemiBold, 1.594; Source Sans: Semibold, 1.42). Each one comes with the mathematics that belongs to it (math =
 % auto), a mono family shared by all (IBM Plex Mono) and a display series
 % for the large sizes: the light weight where the family has one.
-%   plex        IBM Plex Sans: technical and warm, the default
+%   opensans    Open Sans: humanist and open, the default
+%   plex        IBM Plex Sans: technical and warm
 %   source      Source Sans: humanist, quiet (nordic, japandi)
 %   heros       TeX Gyre Heros: the grotesque of the Swiss style
 %   adventor    TeX Gyre Adventor: geometric, after the Bauhaus
@@ -75,6 +77,24 @@
               ]
           }
           { \RequirePackage { plex-sans } }
+        \__lamalunga_mono:
+      }
+    { opensans }
+      {
+        \tl_gset:Nn \g__lamalunga_display_series_tl { l }
+        \bool_if:NTF \g__lamalunga_unicode_bool
+          {
+            \setsansfont { OpenSans }
+              [
+                Extension = .ttf , UprightFont = *-Regular ,
+                ItalicFont = *-Italic , BoldFont = *-SemiBold ,
+                BoldItalicFont = *-SemiBoldItalic ,
+                FontFace = { l } { n } { *-Light } ,
+                FontFace = { l } { it } { *-LightItalic } ,
+                Numbers = { Lining , Tabular } ,
+              ]
+          }
+          { \RequirePackage [ defaultsans , lining , tabular ] { opensans } }
         \__lamalunga_mono:
       }
     { source }

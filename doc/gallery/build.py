@@ -108,6 +108,7 @@ FIGURES = {
                 "\\addlogo{example-image-16x9}\\addlogo{example-image-1x1}"
                 "\\addlogo{example-image-10x16}"),
     "fonts": ("title", [
+        ("font=opensans", "font=opensans"),
         ("font=plex", "font=plex"),
         ("font=source", "font=source"),
         ("font=heros", "font=heros"),

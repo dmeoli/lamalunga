@@ -59,7 +59,7 @@
 \tl_gset:Nn \g_lamalunga_sectionpage_tl { progressbar }
 \tl_gset:Nn \g_lamalunga_blocks_tl { tinted }
 \tl_gset:Nn \g_lamalunga_guides_tl { none }
-\tl_gset:Nn \g_lamalunga_font_tl { plex }
+\tl_gset:Nn \g_lamalunga_font_tl { opensans }
 \tl_gset:Nn \g_lamalunga_math_tl { auto }
 \tl_gset:Nn \g_lamalunga_titles_tl { boxed }
 \tl_gset:Nn \g_lamalunga_weight_tl { bold }
@@ -101,7 +101,7 @@
 \__lamalunga_choice:nn { weight } { bold , light }                  % preamble
 \__lamalunga_choice:nn { bullets } { golden , bauhaus }
 \__lamalunga_choice:nn { font }                                     % preamble
-  { plex , source , heros , adventor , garamond , libertinus , none }
+  { opensans , plex , source , heros , adventor , garamond , libertinus , none }
 \__lamalunga_choice:nn { math } { auto , fira , default }           % preamble
 
 % Styles: one choice, and font, harmony, forms and mode follow from it, as
@@ -113,7 +113,7 @@
     style / lamalunga .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 7A52C0 , font = plex , weight = bold , harmony = complementary ,
+          primary = 7A52C0 , font = opensans , weight = bold , harmony = complementary ,
           mode = light , canvas = tinted , titles = boxed , alerts = bold ,
           bullets = golden , corners = square , blocks = tinted ,
           margins = narrow , spiral = true
