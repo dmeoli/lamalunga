@@ -322,7 +322,8 @@ relies on packages which do not work with `unicode-math`.
 
 ### `titles=boxed|plain` and `alerts=bold|color|boxed`
 
-Boxed titles (the default) set the frame titles, the title and the section
+Without the spiral, the title page is centered horizontally (and stays at the
+golden section of the height). Boxed titles (the default) set the frame titles, the title and the section
 titles in a box of the primary, and a title broken with `\\` gets one box per
 line. Alerts are in the first accent and in bold by default, in the accent
 alone with `color`, or a highlight of the accent with `boxed`.
@@ -371,7 +372,7 @@ are not numbered.
 | `\begin{goldencolumns}[major\|minor] ... \nextcolumn ... \end{goldencolumns}` | two columns of 61.8% and 38.2% of the width, the major first unless `minor` is given |
 | `\highlight[role]{text}` | the text, in bold, in a box of a color of the palette (`primary`, `accent`, `accent2`, `complement`, `triad-a`, `split-b`, and so on, or any xcolor name), in the ink of higher contrast; the default is the first accent |
 | `\addaffiliation{key}{text}`, `\addauthor{name}{keys}` | authors in a grid on the title page, each with the marks († ‡ § ¶) of its affiliations, which follow in the small print; the short author becomes "first author et al." |
-| `\addlogo{file}` | logos in a row in the upper right corner of the title page, which the spiral leaves free, all with the area of a golden rectangle 21 pt high |
+| `\addlogo{file}` | logos in a row under the date, aligned as the rest of the title page, all with the area of a golden rectangle 21 pt high |
 | `\slidenote{text}`, `\slidecite{key}` | a note with no mark at the foot of the frame, and (with biblatex) the author, title and year of a reference |
 | `\hence{text}` | a consequence of the line above, flush right in the small print, after an arrow in the accent |
 | `\goldenimage[width]{file}` | the image scaled to cover a golden rectangle and cropped |

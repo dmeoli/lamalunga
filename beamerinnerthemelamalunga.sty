@@ -89,6 +89,11 @@
 \cs_new:Npn \__lamalunga_mark:n #1
   { \prop_item:Nn \g__lamalunga_mark_prop {#1} }
 
+% without the spiral the title page is centred, with it the text keeps to
+% the left of the first square
+\cs_new_protected:Npn \__lamalunga_title_align:
+  { \bool_if:NTF \g_lamalunga_spiral_bool { \raggedright } { \centering } }
+
 \dim_new:N \l__lamalunga_cell_dim
 \int_new:N \l__lamalunga_cols_int
 \cs_new_protected:Npn \__lamalunga_author_grid:
@@ -97,7 +102,7 @@
     \int_set:Nn \l__lamalunga_cols_int
       {
         \int_min:nn { \seq_count:N \g__lamalunga_authors_seq }
-          { \dim_compare:nNnTF { \linewidth } < { 0.5 \paperwidth } { 2 } { 3 } }
+          { \dim_compare:nNnTF { \linewidth } < { 0.6 \paperwidth } { 2 } { 3 } }
       }
     \dim_set:Nn \l__lamalunga_cell_dim
       {
@@ -107,7 +112,7 @@
               / \l__lamalunga_cols_int
           }
       }
-    \raggedright
+    \__lamalunga_title_align:
     \int_zero:N \l_tmpa_int
     \seq_map_inline:Nn \g__lamalunga_authors_seq
       {
@@ -123,7 +128,7 @@
 \cs_new_protected:Npn \__lamalunga_author_cell:nn #1 #2
   {
     \begin{minipage} [t] { \l__lamalunga_cell_dim }
-      \raggedright
+      \__lamalunga_title_align:
       { \usebeamerfont { author } \usebeamercolor [fg] { author }
         #1 \textsuperscript { \__lamalunga_marks:n {#2} } \par }
       { \usebeamerfont { institute } \usebeamercolor [fg] { institute }
@@ -132,8 +137,8 @@
     \end{minipage}
   }
 
-% Logos: \addlogo{file}; on the title page they stand in a row in the
-% upper right corner, which the spiral leaves free, all with the same area, that of a golden
+% Logos: \addlogo{file}; on the title page they stand in a row under the
+% date, aligned as the rest of the page, all with the same area, that of a golden
 % rectangle 21 pt high, so that a wide logo does not outweigh a square one
 \seq_new:N \g__lamalunga_logos_seq
 \NewDocumentCommand \addlogo { m }
@@ -156,15 +161,11 @@
   {
     \seq_if_empty:NF \g__lamalunga_logos_seq
       {
-        \begin{tikzpicture} [ remember~picture , overlay ]
-          \node [ anchor = north~east , inner~sep = 0pt ] at
-            ( [ shift = { ( - \lamalungahmargin , - \lamalungavmargin ) } ]
-              current~page.north~east )
-            {
-              \seq_map_inline:Nn \g__lamalunga_logos_seq
-                { \hspace { \fib { 8 } pt } \__lamalunga_logo:n {##1} }
-            } ;
-        \end{tikzpicture}
+        \par \vskip \fib { 6 } pt
+        \leavevmode
+        \seq_map_inline:Nn \g__lamalunga_logos_seq
+          { \__lamalunga_logo:n {##1} \hspace { \fib { 8 } pt } }
+        \unskip \par
       }
   }
 
@@ -206,9 +207,8 @@
 \setbeamertemplate { title~page }
   {
     \bool_if:NT \g_lamalunga_spiral_bool { \lamalunga@titlespiral }
-    \lamalunga@logos
-    % the title block fills the first square of the spiral, or the whole
-    % text width when there is no spiral or more than four authors
+    % the title block fills the first square of the spiral, or, centred,
+    % the whole text width when there is no spiral or more than four authors
     \bool_lazy_and:nnTF { \g_lamalunga_spiral_bool }
       { \int_compare_p:nNn { \seq_count:N \g__lamalunga_authors_seq } < { 5 } }
       {
@@ -221,13 +221,11 @@
               }
           }
       }
-      {
-        \int_compare:nNnTF { \seq_count:N \g__lamalunga_authors_seq } > { 4 }
-          { \dim_set:Nn \l__lamalunga_title_dim { \textwidth } }
-          { \dim_set:Nn \l__lamalunga_title_dim { \goldenmajor { \textwidth } } }
-      }
+      { \dim_set:Nn \l__lamalunga_title_dim { \textwidth } }
+    \par \noindent
+    \bool_if:NF \g_lamalunga_spiral_bool { \hspace* { \fill } }
     \begin{minipage} [t] { \l__lamalunga_title_dim }
-      \raggedright
+      \__lamalunga_title_align:
       {
         \usebeamerfont { title } \usebeamercolor [fg] { title }
         \str_if_eq:VnTF \g_lamalunga_titles_tl { boxed }
@@ -265,7 +263,10 @@
         }
       \tl_if_empty:NF \inserttitlegraphic
         { \vskip \fib { 7 } pt \inserttitlegraphic \par }
+      \lamalunga@logos
     \end{minipage}
+    \bool_if:NF \g_lamalunga_spiral_bool { \hspace* { \fill } }
+    \par
   }
 
 \cs_set_protected:Npn \maketitle
