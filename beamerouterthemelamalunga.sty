@@ -1,5 +1,5 @@
 %% beamerouterthemelamalunga.sty
-%% Lamalunga outer theme: margins, frame titles, progress bar, foot lines,
+%% lamalunga outer theme: margins, frame titles, progress bar, foot lines,
 %% composition guides.
 %%
 %% Copyright (C) 2026 Donato Meoli
@@ -13,7 +13,7 @@
 %% The Current Maintainer of this work is Donato Meoli.
 \NeedsTeXFormat{LaTeX2e}[2022/06/01]
 \ProvidesExplPackage{beamerouterthemelamalunga}{2026/10/03}{0.1.0}
-  {Lamalunga outer theme}
+  {lamalunga outer theme}
 
 \RequirePackage{lamalunga}
 \prg_generate_conditional_variant:Nnn \tl_if_in:nn { nV } { T }
@@ -80,9 +80,12 @@
     \setbeamertemplate { frametitle }
       {
         \nointerlineskip
-        % the title sits in the top margin, phi^-1 of it above
-        \vskip \fp_eval:n { round( \dim_to_decimal:n { \lamalungavmargin }
-          / \c_lamalunga_phi_fp ) } pt
+        % the top margin above the title, as wide as the bottom one, so that
+        % the block between them is a golden rectangle; under a running head,
+        % which is the margin itself, a Fibonacci step only
+        \str_if_eq:VnTF \g_lamalunga_headline_tl { running }
+          { \vskip \fib { 5 } pt }
+          { \vskip \lamalungavmargin }
         \begin{beamercolorbox} [ wd = \paperwidth ] { frametitle }
           \hspace* { \lamalungahmargin }
           \begin{minipage} [t]
@@ -116,6 +119,39 @@
         \vskip \fib { 5 } pt
       }
 
+    % running head: the short title at the left, the author at the right,
+    % over a hairline as long as the text, in the top margin
+    \str_if_eq:VnT \g_lamalunga_headline_tl { running }
+      {
+        \setbeamertemplate { headline }
+          {
+            \vbox_to_ht:nn { \lamalungavmargin }
+              {
+                \vskip 0pt plus 1fil
+                \usebeamerfont { headline }
+                \hbox_to_wd:nn { \paperwidth }
+                  {
+                    \hspace* { \lamalungahmargin }
+                    { \color { lamalunga-primary } \insertshorttitle }
+                    \hfil
+                    { \color { lamalunga-muted } \insertshortauthor }
+                    \hspace* { \lamalungahmargin }
+                  }
+                \vskip \fib { 4 } pt
+                \hbox_to_wd:nn { \paperwidth }
+                  {
+                    \hspace* { \lamalungahmargin }
+                    { \color { lamalunga-primary-t3 }
+                      \rule { \dimexpr \paperwidth - 2 \lamalungahmargin \relax }
+                        { \lamalungahairline } }
+                    \hfil
+                  }
+                \vskip 0pt plus \fp_use:N \c_lamalunga_phi_fp fil
+              }
+            \str_if_eq:VnT \g_lamalunga_progressbar_tl { head }
+              { \nointerlineskip \lamalungaprogressbar { \paperwidth } }
+          }
+      }
     \str_if_eq:VnT \g_lamalunga_headline_tl { none }
       {
         \setbeamertemplate { headline }
@@ -127,12 +163,68 @@
 
     \str_case:Vn \g_lamalunga_footline_tl
       {
+        % no foot line: the page is free, and only the bottom margin stays
         { none }
           {
             \setbeamertemplate { footline }
               {
+                \vbox_to_ht:nn { \lamalungavmargin } { }
                 \str_if_eq:VnT \g_lamalunga_progressbar_tl { foot }
-                  { \lamalungaprogressbar { \paperwidth } }
+                  { \nointerlineskip \lamalungaprogressbar { \paperwidth } }
+              }
+          }
+        % credits: the short title at the left, the author at the right, in
+        % the bottom margin, the top of the page left free
+        { credits }
+          {
+            \setbeamertemplate { footline }
+              {
+                \begin{beamercolorbox}
+                  [ wd = \paperwidth , ht = \lamalungavmargin , dp = 0pt ] { footline }
+                  \usebeamerfont { footline }
+                  \vbox_to_ht:nn { \lamalungavmargin }
+                    {
+                      \vss
+                      \hbox_to_wd:nn { \paperwidth }
+                        {
+                          \hspace* { \lamalungahmargin }
+                          { \color { lamalunga-primary } \insertshorttitle }
+                          \hfil
+                          { \color { lamalunga-muted } \insertshortauthor }
+                          \hspace* { \lamalungahmargin }
+                        }
+                      \vskip 0pt plus \fp_eval:n { 1 / \c_lamalunga_phi_fp } fil
+                    }
+                \end{beamercolorbox}
+                \str_if_eq:VnT \g_lamalunga_progressbar_tl { foot }
+                  { \nointerlineskip \lamalungaprogressbar { \paperwidth } }
+              }
+          }
+        % running foot: the short institute at the left, the frame number
+        % at the right
+        { running }
+          {
+            \setbeamertemplate { footline }
+              {
+                \begin{beamercolorbox}
+                  [ wd = \paperwidth , ht = \lamalungavmargin , dp = 0pt ] { footline }
+                  \usebeamerfont { footline }
+                  \vbox_to_ht:nn { \lamalungavmargin }
+                    {
+                      \vss
+                      \hbox_to_wd:nn { \paperwidth }
+                        {
+                          \hspace* { \lamalungahmargin }
+                          { \color { lamalunga-muted } \insertshortinstitute }
+                          \hfil
+                          { \color { lamalunga-primary } \lamalunga@framenumber }
+                          \hspace* { \lamalungahmargin }
+                        }
+                      \vskip 0pt plus \fp_eval:n { 1 / \c_lamalunga_phi_fp } fil
+                    }
+                \end{beamercolorbox}
+                \str_if_eq:VnT \g_lamalunga_progressbar_tl { foot }
+                  { \nointerlineskip \lamalungaprogressbar { \paperwidth } }
               }
           }
         { minimal }

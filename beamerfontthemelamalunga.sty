@@ -1,5 +1,5 @@
 %% beamerfontthemelamalunga.sty
-%% Lamalunga font theme: one family, sizes on a modular scale.
+%% lamalunga font theme: two families, sizes on a modular scale.
 %%
 %% Copyright (C) 2026 Donato Meoli
 %%
@@ -12,189 +12,67 @@
 %% The Current Maintainer of this work is Donato Meoli.
 \NeedsTeXFormat{LaTeX2e}[2022/06/01]
 \ProvidesExplPackage{beamerfontthemelamalunga}{2026/10/03}{0.1.0}
-  {Lamalunga font theme}
+  {lamalunga font theme}
 
 \RequirePackage{lamalunga}
 
 % ---------------------------------------------------------------------------
-% Families. The bold of each family is the weight whose stems are closest to
-% phi times those of the regular (Open Sans: SemiBold, 1.40, against 1.85
-% for the Bold, and its Light is 0.60, close to phi^-1; IBM Plex Sans:
-% SemiBold, 1.594; Source Sans: Semibold, 1.42). Each one comes with the mathematics that belongs to it (math =
-% auto), a mono family shared by all (IBM Plex Mono) and a display series
-% for the large sizes: the light weight where the family has one.
-%   opensans    Open Sans: humanist and open, the default
-%   plex        IBM Plex Sans: technical and warm
-%   source      Source Sans: humanist, quiet (nordic, japandi)
-%   heros       TeX Gyre Heros: the grotesque of the Swiss style
-%   adventor    TeX Gyre Adventor: geometric, after the Bauhaus
-%   garamond    EB Garamond: the Renaissance book face (classical)
-%   libertinus  Libertinus Serif: a serif for mathematics-heavy talks
+% Families: the same two for every style. Titles, subtitle and author are
+% set in Open Sans, whose weights step by about sqrt(phi) (Light 0.60,
+% SemiBold 1.40, Bold 1.85, ExtraBold 2.34 times the Regular): ExtraBold
+% for display text, SemiBold for subtitle and author, Light for weight =
+% light. Text, mathematics and code are set in Computer Modern (Latin Modern
+% Sans, Latin Modern Math and Latin Modern Mono, with their optical sizes),
+% whose Bold is the golden bold (1.77 times the Regular, against 1.43 for
+% the demi-condensed). With font = none the fonts are left to the document.
 % ---------------------------------------------------------------------------
 
 \bool_new:N \g__lamalunga_unicode_bool
 \bool_lazy_or:nnT { \sys_if_engine_luatex_p: } { \sys_if_engine_xetex_p: }
   { \bool_gset_true:N \g__lamalunga_unicode_bool }
-\tl_new:N \g__lamalunga_display_series_tl
-\tl_gset:Nn \g__lamalunga_display_series_tl { m }
-\tl_new:N \g__lamalunga_math_font_tl
-\tl_gset:Nn \g__lamalunga_math_font_tl { FiraMath-Regular.otf }
-
-\cs_new_protected:Npn \__lamalunga_mono:
-  {
-    \bool_if:NTF \g__lamalunga_unicode_bool
-      {
-        \setmonofont { IBMPlexMono }
-          [
-            Extension = .otf , UprightFont = *-Regular , ItalicFont = *-Italic ,
-            BoldFont = *-SemiBold , BoldItalicFont = *-SemiBoldItalic ,
-            Scale = MatchLowercase ,
-          ]
-      }
-      { \RequirePackage [ scale = 0.94 ] { plex-mono } }
-  }
+\bool_new:N \g__lamalunga_fonts_bool
+\str_if_eq:VnF \g_lamalunga_font_tl { none }
+  { \bool_gset_true:N \g__lamalunga_fonts_bool }
 
 \bool_if:NF \g__lamalunga_unicode_bool
   { \RequirePackage [ T1 ] { fontenc } }
 \bool_if:NT \g__lamalunga_unicode_bool
   { \RequirePackage { fontspec } }
 
-\str_case:Vn \g_lamalunga_font_tl
+\bool_if:NTF \g__lamalunga_fonts_bool
   {
-    { plex }
+    \bool_if:NTF \g__lamalunga_unicode_bool
       {
-        \tl_gset:Nn \g__lamalunga_display_series_tl { l }
-        \bool_if:NTF \g__lamalunga_unicode_bool
-          {
-            \setsansfont { IBMPlexSans }
-              [
-                Extension = .otf , UprightFont = *-Regular ,
-                ItalicFont = *-Italic , BoldFont = *-SemiBold ,
-                BoldItalicFont = *-SemiBoldItalic ,
-                FontFace = { l } { n } { *-Light } ,
-                FontFace = { l } { it } { *-LightItalic } ,
-                Numbers = { Lining , Tabular } ,
-              ]
-          }
-          { \RequirePackage { plex-sans } }
-        \__lamalunga_mono:
-      }
-    { opensans }
-      {
-        \tl_gset:Nn \g__lamalunga_display_series_tl { l }
-        \bool_if:NTF \g__lamalunga_unicode_bool
-          {
-            \setsansfont { OpenSans }
-              [
-                Extension = .ttf , UprightFont = *-Regular ,
-                ItalicFont = *-Italic , BoldFont = *-SemiBold ,
-                BoldItalicFont = *-SemiBoldItalic ,
-                FontFace = { l } { n } { *-Light } ,
-                FontFace = { l } { it } { *-LightItalic } ,
-                Numbers = { Lining , Tabular } ,
-              ]
-          }
-          { \RequirePackage [ defaultsans , lining , tabular ] { opensans } }
-        \__lamalunga_mono:
-      }
-    { source }
-      {
-        \tl_gset:Nn \g__lamalunga_display_series_tl { l }
-        \bool_if:NTF \g__lamalunga_unicode_bool
-          {
-            \setsansfont { SourceSansPro }
-              [
-                Extension = .otf , UprightFont = *-Regular ,
-                ItalicFont = *-RegularIt , BoldFont = *-Semibold ,
-                BoldItalicFont = *-SemiboldIt ,
-                FontFace = { l } { n } { *-Light } ,
-                FontFace = { l } { it } { *-LightIt } ,
-              ]
-          }
-          { \RequirePackage [ semibold ] { sourcesanspro } }
-        \__lamalunga_mono:
-      }
-    { heros }
-      {
-        \bool_if:NTF \g__lamalunga_unicode_bool
-          {
-            \setsansfont { texgyreheros }
-              [
-                Extension = .otf , UprightFont = *-regular ,
-                ItalicFont = *-italic , BoldFont = *-bold ,
-                BoldItalicFont = *-bolditalic ,
-              ]
-          }
-          { \RequirePackage { tgheros } }
-        \__lamalunga_mono:
-      }
-    { adventor }
-      {
-        \bool_if:NTF \g__lamalunga_unicode_bool
-          {
-            \setsansfont { texgyreadventor }
-              [
-                Extension = .otf , UprightFont = *-regular ,
-                ItalicFont = *-italic , BoldFont = *-bold ,
-                BoldItalicFont = *-bolditalic ,
-              ]
-          }
-          { \RequirePackage { tgadventor } }
-        \__lamalunga_mono:
-      }
-    { garamond }
-      {
-        \tl_gset:Nn \g__lamalunga_math_font_tl { Garamond-Math.otf }
-        \bool_if:NTF \g__lamalunga_unicode_bool
-          {
-            \setmainfont { EBGaramond }
-              [
-                Extension = .otf , UprightFont = *-Regular ,
-                ItalicFont = *-Italic , BoldFont = *-SemiBold ,
-                BoldItalicFont = *-SemiBoldItalic ,
-                Numbers = { OldStyle , Proportional } ,
-              ]
-          }
-          { \RequirePackage { ebgaramond } }
-        \__lamalunga_mono:
-        \usefonttheme { serif }
-      }
-    { libertinus }
-      {
-        \tl_gset:Nn \g__lamalunga_math_font_tl { LibertinusMath-Regular.otf }
-        \bool_if:NTF \g__lamalunga_unicode_bool
-          {
-            \setmainfont { LibertinusSerif }
-              [
-                Extension = .otf , UprightFont = *-Regular ,
-                ItalicFont = *-Italic , BoldFont = *-Semibold ,
-                BoldItalicFont = *-SemiboldItalic ,
-              ]
-          }
-          { \RequirePackage { libertinus } }
-        \__lamalunga_mono:
-        \usefonttheme { serif }
-      }
-  }
-
-\str_if_eq:VnT \g_lamalunga_math_tl { fira }
-  { \tl_gset:Nn \g__lamalunga_math_font_tl { FiraMath-Regular.otf } }
-\bool_lazy_and:nnT
-  { \g__lamalunga_unicode_bool }
-  { ! \str_if_eq_p:Vn \g_lamalunga_math_tl { default } }
-  {
-    \str_if_eq:VnF \g_lamalunga_font_tl { none }
-      {
+        % Latin Modern is the default family of LuaLaTeX and XeLaTeX; its
+        % mathematics comes with unicode-math, at the end of the preamble,
+        % after amsmath and the other packages of the document
         \usefonttheme { professionalfonts }
-        % at the end of the preamble, after amsmath and the other packages
-        % of the document, as unicode-math requires
         \AtEndPreamble
           {
             \RequirePackage { unicode-math }
-            \exp_args:NV \setmathfont \g__lamalunga_math_font_tl
+            \setmathfont { latinmodern-math.otf }
           }
+        \newfontfamily \lamalunga@titlefamily { OpenSans }
+          [
+            Extension = .ttf , UprightFont = *-Regular , ItalicFont = *-Italic ,
+            BoldFont = *-Bold , BoldItalicFont = *-BoldItalic ,
+            FontFace = { l } { n } { *-Light } ,
+            FontFace = { l } { it } { *-LightItalic } ,
+            FontFace = { sb } { n } { *-SemiBold } ,
+            FontFace = { sb } { it } { *-SemiBoldItalic } ,
+            FontFace = { eb } { n } { *-ExtraBold } ,
+            FontFace = { eb } { it } { *-ExtraBoldItalic } ,
+            Numbers = { Lining , Tabular } ,
+          ]
+      }
+      {
+        \RequirePackage { lmodern }
+        \cs_new_protected:Npn \lamalunga@titlefamily
+          { \fontfamily { opensans-TLF } \selectfont }
       }
   }
+  { \cs_new_protected:Npn \lamalunga@titlefamily { } }
+\NewDocumentCommand \lamalungatitlefamily { } { \lamalunga@titlefamily }
 
 % Optical margin alignment and, for all-capitals, letterspacing
 \RequirePackage [ protrusion = true , tracking = true ] { microtype }
@@ -204,14 +82,32 @@
     \textls [ \fp_eval:n { round( 1000 * \c_lamalunga_phi_fp ^ (-6) ) } ]
       { \MakeUppercase {#1} }
   }
-\NewDocumentCommand \lamalungalight { }
-  { \exp_args:NV \fontseries \g__lamalunga_display_series_tl \selectfont }
-% the series of display text (titles, section and standout pages): bold for
-% weight = bold, the light weight of the family for weight = light
+% titles are never hyphenated: a word that does not fit goes whole to the
+% next line
+\NewDocumentCommand \lamalunganohyphens { }
+  { \hyphenpenalty = 10000 \exhyphenpenalty = 10000 \relax }
+% the series of display text (titles, section and standout pages): the
+% ExtraBold of Open Sans for weight = bold, its Light for weight = light
 \NewDocumentCommand \lamalungadisplay { }
   {
-    \str_if_eq:VnTF \g_lamalunga_weight_tl { bold }
-      { \bfseries } { \lamalungalight }
+    \lamalunganohyphens
+    \bool_if:NTF \g__lamalunga_fonts_bool
+      {
+        \str_if_eq:VnTF \g_lamalunga_weight_tl { light }
+          { \fontseries { l } }
+          { \fontseries { eb } }
+      }
+      {
+        \str_if_eq:VnTF \g_lamalunga_weight_tl { light }
+          { \mdseries } { \bfseries }
+      }
+  }
+% the series of subtitle and author: the SemiBold of Open Sans
+\NewDocumentCommand \lamalungasecondary { }
+  {
+    \lamalunganohyphens
+    \bool_if:NT \g__lamalunga_fonts_bool
+      { \fontseries { sb } }
   }
 
 % ---------------------------------------------------------------------------
@@ -247,24 +143,31 @@
 \cs_new_protected:Npn \lamalunga@fonts
   {
     \setbeamerfont { title }
-      { size = \modularsize { 2 } , series = \lamalungadisplay }
+      { size = \modularsize { 2 } , family = \lamalunga@titlefamily ,
+        series = \lamalungadisplay }
     \setbeamerfont { subtitle }
-      { size = \modularsize { 1 } , series = \lamalungalight , shape = \itshape }
-    \setbeamerfont { author } { size = \modularsize { 0 } }
+      { size = \modularsize { 1 } , family = \lamalunga@titlefamily ,
+        series = \lamalungasecondary , shape = \itshape }
+    \setbeamerfont { author }
+      { size = \modularsize { 0 } , family = \lamalunga@titlefamily , series = \lamalungasecondary }
     \setbeamerfont { institute } { size = \modularsize { -0.5 } }
     \setbeamerfont { date } { size = \modularsize { -0.5 } }
     \setbeamerfont { titlegraphic } { size = \modularsize { -0.5 } }
 
     \setbeamerfont { frametitle }
-      { size = \modularsize { 0.5 } , series = \lamalungadisplay }
+      { size = \modularsize { 0.5 } , family = \lamalunga@titlefamily ,
+        series = \lamalungadisplay }
     \setbeamerfont { framesubtitle } { size = \modularsize { 0 } }
     \setbeamerfont { section~title }
-      { size = \modularsize { 2 } , series = \lamalungadisplay }
+      { size = \modularsize { 2 } , family = \lamalunga@titlefamily ,
+        series = \lamalungadisplay }
     \setbeamerfont { section~number } { size = \modularsize { 0 } }
     \setbeamerfont { standout }
-      { size = \modularsize { 2 } , series = \lamalungadisplay }
+      { size = \modularsize { 2 } , family = \lamalunga@titlefamily ,
+        series = \lamalungadisplay }
 
-    \setbeamerfont { block~title } { size = \modularsize { 0 } , series = \bfseries }
+    \setbeamerfont { block~title }
+      { size = \modularsize { 0 } , series = \bfseries \lamalunganohyphens }
     \setbeamerfont { footline } { size = \modularsize { -0.5 } }
     \setbeamerfont { headline } { size = \modularsize { -0.5 } }
     \setbeamerfont { caption } { size = \modularsize { -0.5 } }

@@ -1,5 +1,5 @@
 %% beamerinnerthemelamalunga.sty
-%% Lamalunga inner theme: title and section pages, standout frames, blocks,
+%% lamalunga inner theme: title and section pages, standout frames, blocks,
 %% lists, golden columns and focal points.
 %%
 %% Copyright (C) 2026 Donato Meoli
@@ -13,7 +13,7 @@
 %% The Current Maintainer of this work is Donato Meoli.
 \NeedsTeXFormat{LaTeX2e}[2022/06/01]
 \ProvidesExplPackage{beamerinnerthemelamalunga}{2026/10/03}{0.1.0}
-  {Lamalunga inner theme}
+  {lamalunga inner theme}
 
 \RequirePackage{lamalunga}
 
@@ -484,8 +484,33 @@
         }
       }
   }
+% Arrows: triangles pointing right, in the color of the item, whose side
+% shrinks by phi at every level, centred on the x-height
+\cs_new_protected:Npn \__lamalunga_arrow:n #1
+  {
+    \fp_set:Nn \l_tmpa_fp {#1}
+    \raisebox { 0.5ex }
+      {
+        \tikz [ baseline = 0pt ]
+          \fill
+            ( 0 , - 0.5 * \fp_use:N \l_tmpa_fp em )
+            -- ( 0.866 * \fp_use:N \l_tmpa_fp em , 0 )
+            -- ( 0 , 0.5 * \fp_use:N \l_tmpa_fp em ) -- cycle ;
+      }
+  }
 \cs_new_protected:Npn \lamalunga@bullets
   {
+    \str_if_eq:VnT \g_lamalunga_bullets_tl { arrows }
+      {
+        \setbeamertemplate { itemize~item }
+          { \__lamalunga_arrow:n { \goldenpower { -1.5 } } }
+        \setbeamertemplate { itemize~subitem }
+          { \__lamalunga_arrow:n { \goldenpower { -2.5 } } }
+        \setbeamertemplate { itemize~subsubitem }
+          { \__lamalunga_arrow:n { \goldenpower { -3.5 } } }
+      }
+    \str_if_eq:VnF \g_lamalunga_bullets_tl { arrows }
+    {
     \str_if_eq:VnTF \g_lamalunga_bullets_tl { bauhaus }
       {
         \setbeamertemplate { itemize~item } { \__lamalunga_bauhaus:nn { 1 } { square } }
@@ -502,6 +527,7 @@
         \setbeamertemplate { itemize~subsubitem }
           { \__lamalunga_square:n { \goldenpower { -4 } em } }
       }
+    }
   }
 \lamalunga@bullets
 \setbeamertemplate { enumerate~item } { \insertenumlabel . }

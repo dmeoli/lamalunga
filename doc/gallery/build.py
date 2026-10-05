@@ -64,8 +64,8 @@ FIGURES = {
         ("weight=light", "weight=light"),
     ]),
     "titles": ("title,content", [
-        ("titles=boxed, alerts=bold", "titles=boxed,alerts=bold"),
-        ("titles=plain, alerts=color", "titles=plain,alerts=color"),
+        ("titles=plain, alerts=bold", "titles=plain,alerts=bold"),
+        ("titles=boxed, alerts=boxed", "titles=boxed,alerts=boxed"),
     ]),
     "blocks": ("blocks", [
         ("blocks=tinted", "blocks=tinted"),
@@ -73,16 +73,21 @@ FIGURES = {
         ("blocks=rule", "blocks=rule"),
     ]),
     "bullets": ("content", [
+        ("bullets=arrows", "bullets=arrows"),
         ("bullets=golden", "bullets=golden"),
         ("bullets=bauhaus", "bullets=bauhaus"),
     ]),
     "chrome": ("content", [
-        ("footline=minimal, progressbar=frametitle",
-         "footline=minimal,progressbar=frametitle"),
+        ("headline=none, footline=credits",
+         "headline=none,footline=credits"),
+        ("headline=running, footline=running",
+         "headline=running,footline=running"),
+        ("headline=none, footline=minimal, progressbar=frametitle",
+         "headline=none,footline=minimal,progressbar=frametitle"),
         ("footline=infolines, progressbar=foot",
          "footline=infolines,progressbar=foot"),
-        ("headline=miniframes, footline=none",
-         "headline=miniframes,footline=none,progressbar=head"),
+        ("headline=miniframes, footline=infolines",
+         "headline=miniframes,footline=infolines,progressbar=head"),
     ]),
     "aspect": ("title", [
         ("aspect=golden", "aspect=golden"),
@@ -107,14 +112,8 @@ FIGURES = {
                 "\\addauthor{Augustus De Morgan}{ucl}"
                 "\\addlogo{example-image-16x9}\\addlogo{example-image-1x1}"
                 "\\addlogo{example-image-10x16}"),
-    "fonts": ("title", [
-        ("font=opensans", "font=opensans"),
-        ("font=plex", "font=plex"),
-        ("font=source", "font=source"),
-        ("font=heros", "font=heros"),
-        ("font=adventor", "font=adventor"),
-        ("font=garamond", "font=garamond"),
-        ("font=libertinus", "font=libertinus"),
+    "fonts": ("title,content", [
+        ("font=lamalunga", "font=lamalunga"),
     ]),
     "margins": ("content", [
         ("margins=narrow", "margins=narrow"),

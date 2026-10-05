@@ -1,5 +1,5 @@
 %% beamerthemelamalunga.sty
-%% Lamalunga: a beamer theme built on golden proportions and computed
+%% lamalunga: a beamer theme built on golden proportions and computed
 %% color harmonies.
 %%
 %% Copyright (C) 2026 Donato Meoli
@@ -13,7 +13,7 @@
 %% The Current Maintainer of this work is Donato Meoli.
 \NeedsTeXFormat{LaTeX2e}[2022/06/01]
 \ProvidesExplPackage{beamerthemelamalunga}{2026/10/03}{0.1.0}
-  {Lamalunga beamer theme}
+  {lamalunga beamer theme}
 
 \RequirePackage{lamalunga}
 \RequirePackage{etoolbox}
@@ -37,7 +37,6 @@
 \tl_new:N \g_lamalunga_blocks_tl
 \tl_new:N \g_lamalunga_guides_tl
 \tl_new:N \g_lamalunga_font_tl
-\tl_new:N \g_lamalunga_math_tl
 \tl_new:N \g_lamalunga_titles_tl
 \tl_new:N \g_lamalunga_weight_tl
 \tl_new:N \g_lamalunga_alerts_tl
@@ -55,16 +54,15 @@
 \tl_gset:Nn \g_lamalunga_progressbar_tl { frametitle }
 \tl_gset:Nn \g_lamalunga_numbering_tl { fraction }
 \tl_gset:Nn \g_lamalunga_headline_tl { none }
-\tl_gset:Nn \g_lamalunga_footline_tl { minimal }
+\tl_gset:Nn \g_lamalunga_footline_tl { credits }
 \tl_gset:Nn \g_lamalunga_sectionpage_tl { progressbar }
 \tl_gset:Nn \g_lamalunga_blocks_tl { tinted }
 \tl_gset:Nn \g_lamalunga_guides_tl { none }
-\tl_gset:Nn \g_lamalunga_font_tl { opensans }
-\tl_gset:Nn \g_lamalunga_math_tl { auto }
-\tl_gset:Nn \g_lamalunga_titles_tl { boxed }
+\tl_gset:Nn \g_lamalunga_font_tl { lamalunga }
+\tl_gset:Nn \g_lamalunga_titles_tl { plain }
 \tl_gset:Nn \g_lamalunga_weight_tl { bold }
 \tl_gset:Nn \g_lamalunga_alerts_tl { bold }
-\tl_gset:Nn \g_lamalunga_bullets_tl { golden }
+\tl_gset:Nn \g_lamalunga_bullets_tl { arrows }
 \tl_gset:Nn \g_lamalunga_contrast_tl { AA }
 \tl_gset:Nn \g_lamalunga_style_tl { lamalunga }
 \bool_gset_true:N \g_lamalunga_spiral_bool
@@ -91,21 +89,19 @@
 \__lamalunga_choice:nn { margins } { narrow , normal , wide }        % preamble
 \__lamalunga_choice:nn { progressbar } { frametitle , head , foot , none }
 \__lamalunga_choice:nn { numbering } { fraction , counter , none }
-\__lamalunga_choice:nn { headline } { none , miniframes }           % preamble
-\__lamalunga_choice:nn { footline } { minimal , infolines , none }
+\__lamalunga_choice:nn { headline } { none , running , miniframes }           % preamble
+\__lamalunga_choice:nn { footline } { credits , none , running , minimal , infolines }
 \__lamalunga_choice:nn { sectionpage } { progressbar , toc , none }
 \__lamalunga_choice:nn { blocks } { tinted , rule }
 \__lamalunga_choice:nn { guides } { none , thirds , golden , both }
 \__lamalunga_choice:nn { titles } { plain , boxed }
 \__lamalunga_choice:nn { alerts } { bold , color , boxed }
-\__lamalunga_choice:nn { weight } { bold , light }                  % preamble
-\__lamalunga_choice:nn { bullets } { golden , bauhaus }
-\__lamalunga_choice:nn { font }                                     % preamble
-  { opensans , plex , source , heros , adventor , garamond , libertinus , none }
-\__lamalunga_choice:nn { math } { auto , fira , default }           % preamble
+\__lamalunga_choice:nn { weight } { bold , light }                 % preamble
+\__lamalunga_choice:nn { bullets } { arrows , golden , bauhaus }
+\__lamalunga_choice:nn { font } { lamalunga , none }               % preamble
 
-% Styles: one choice, and font, harmony, forms and mode follow from it, as
-% a style of interior design does for a room. A style sets defaults only;
+% Styles: one choice, and weight, harmony, forms and mode follow from it, as
+% a style of interior design does for a room; the families stay the same. A style sets defaults only;
 % options written after it override them.
 \keys_define:nn { lamalunga }
   {
@@ -113,15 +109,15 @@
     style / lamalunga .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 7A52C0 , font = opensans , weight = bold , harmony = complementary ,
-          mode = light , canvas = tinted , titles = boxed , alerts = bold ,
-          bullets = golden , corners = square , blocks = tinted ,
+          primary = 7A52C0 , weight = bold , harmony = complementary ,
+          mode = light , canvas = tinted , titles = plain , alerts = bold ,
+          bullets = arrows , corners = square , blocks = tinted ,
           margins = narrow , spiral = true
         } ,
     style / bauhaus .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = BE1E2D , font = adventor , weight = bold , harmony = triadic ,
+          primary = BE1E2D , weight = bold , harmony = triadic ,
           mode = light , canvas = white , titles = boxed , alerts = boxed ,
           bullets = bauhaus , corners = square , blocks = rule ,
           margins = narrow , spiral = false
@@ -129,7 +125,7 @@
     style / swiss .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = D52B1E , font = heros , weight = bold , harmony = monochromatic ,
+          primary = D52B1E , weight = bold , harmony = monochromatic ,
           mode = light , canvas = white , titles = plain , alerts = bold ,
           bullets = golden , corners = square , blocks = rule ,
           margins = narrow , spiral = false
@@ -137,7 +133,7 @@
     style / nordic .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 4F6D7A , font = source , weight = light , harmony = analogous ,
+          primary = 4F6D7A , weight = light , harmony = analogous ,
           mode = paper , canvas = tinted , titles = plain , alerts = color ,
           bullets = golden , corners = rounded , blocks = tinted ,
           margins = normal , spiral = false
@@ -145,7 +141,7 @@
     style / classical .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 7A1F2B , font = garamond , weight = light , harmony = complementary ,
+          primary = 7A1F2B , weight = light , harmony = complementary ,
           mode = paper , canvas = tinted , titles = plain , alerts = color ,
           bullets = golden , corners = square , blocks = rule ,
           margins = wide , spiral = true
@@ -153,7 +149,7 @@
     style / japandi .code:n =
       \keys_set:nn { lamalunga }
         {
-          primary = 6B705C , font = source , weight = light , harmony = monochromatic ,
+          primary = 6B705C , weight = light , harmony = monochromatic ,
           mode = paper , canvas = tinted , titles = plain , alerts = color ,
           bullets = golden , corners = rounded , blocks = rule ,
           margins = wide , spiral = false

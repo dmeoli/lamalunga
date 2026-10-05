@@ -1,4 +1,4 @@
-# Lamalunga
+# lamalunga
 
 > *Lamalunga* is the karst cave of the Alta Murgia, near Altamura, in
 > Apulia, where on 3 October 1993 a group of speleologists found the Altamura
@@ -56,11 +56,11 @@ standalone figures.
 ```
 
 The theme is written for LuaLaTeX (XeLaTeX works as well) and falls back to
-pdfLaTeX with the same font families, loaded through their packages; the
+pdfLaTeX with the same two families, loaded through their packages; the
 title page and the focal points use TikZ overlays, and therefore need two or
 three runs, which `latexmk -lualatex` does automatically. Options are given to
 `\usetheme` and can be changed later with `\lamalungaset{...}`, except the
-ones that shape the page (`aspect`, `margins`, `headline`, `font`, `math`),
+ones that shape the page (`aspect`, `margins`, `headline`, `font`, `weight`),
 which only make sense in the preamble.
 
 ## The principles
@@ -134,8 +134,8 @@ in parentheses describes the options that control it.
 - **Light, dark and paper.** Three modes are computed from the same primary
   with the same rules, and a talk goes from one to the other by changing one
   option.
-- **Forms in proportion.** Bullets are squares whose side shrinks by φ at each
-  level, or the square, circle and triangle of the Bauhaus with equal areas
+- **Forms in proportion.** Bullets are arrows (triangles pointing right) or
+  squares whose side shrinks by φ at each level, or the square, circle and triangle of the Bauhaus with equal areas
   (so that no shape outweighs the others) and an area that shrinks by φ at
   each level; capitals are letterspaced by φ⁻⁶ of the em; lines are a hairline of φ⁻² pt or a
   rule of φ pt; the padding of a highlight is φ times wider than it is tall;
@@ -145,31 +145,34 @@ in parentheses describes the options that control it.
   is cut into its squares: the title sits in the first one, and the spiral
   turns in the others.
 - **Styles, as in interior design.** A single choice (`bauhaus`, `swiss`,
-  `nordic`, `classical`, `japandi`) sets the font, the primary, the harmony,
-  the mode and the forms of a coherent idiom, each of which can still be
+  `nordic`, `classical`, `japandi`) sets the weight of the titles, the
+  primary, the harmony, the mode and the forms of a coherent idiom (the two
+  families stay the same in every style), each of which can still be
   overridden (cf. [Styles](#styles)).
-- **Typographic accent.** The hierarchy is carried by weight and color: titles
-  and section titles are set in bold in a box of the primary, alerts in bold,
-  and the words that matter in boxes filled with the colors of the harmony, in
-  the ink that contrasts more with each fill; a consequence can be added flush
-  right, after an arrow in the accent (`\hence`).
+- **Typographic accent.** The hierarchy is carried by weight and color: the
+  titles are set in Open Sans ExtraBold in the primary, over a text and a
+  mathematics in Computer Modern, alerts are in bold, and the words that
+  matter can be set in boxes filled with the colors of the harmony, in the ink
+  that contrasts more with each fill (as can the titles, with
+  `titles=boxed`); a consequence can be added flush right, after an arrow in
+  the accent (`\hence`).
 - **Logos of equal weight.** Logos are scaled to the same area (that of a
   golden rectangle 21 pt high) rather than to the same height, since a wide
   and low logo would otherwise outweigh a square one.
-- **Golden weights.** The bold of each family is the weight whose stems are
-  closest to φ times those of the regular one: for Open Sans the SemiBold
-  (1.40, against 1.85 for the Bold), whose Light is moreover 0.60 times the
-  regular, close to φ⁻¹; for IBM Plex Sans the SemiBold, whose stems measure
-  1.594 times the regular ones (within 1.5% of φ, whereas the Bold gives
-  1.84); for Source Sans the Semibold (1.42, against 1.88 for the Bold); TeX
-  Gyre Heros and Adventor have a single bold.
+- **Golden weights.** The bold of the text is the weight of Latin Modern
+  Sans whose stems are closest to φ times those of the regular one, i.e., the
+  Bold (1.77, against 1.43 for the demi-condensed); the weights of Open Sans
+  step by about √φ (Light 0.60, SemiBold 1.40, Bold 1.85, ExtraBold 2.34
+  times the Regular), so that the ExtraBold of the titles stands two steps
+  above the SemiBold of subtitle and author, and the Light of `weight=light`
+  is close to φ⁻¹.
 - **Typographic details.** These are optical margin alignment (`microtype`), figures of
   equal width in tables, letterspaced capitals (`\lamalungacaps`), one family
-  for text and a mathematics that belongs to it, section numbers on two
-  digits.
+  for display text and one for the text, with the mathematics and the
+  typewriter that belong to the latter, section numbers on two digits.
 - **Less, but better.** Dieter Rams's principle of reduction and the Japanese
   *ma*, the value of the empty space: we draw no shadows, gradients or
-  frames around the text, and keeps the margins generous.
+  frames around the text, and we keep the margins generous.
 
 ## Styles
 
@@ -181,14 +184,18 @@ with a different color.
 
 ![The six styles: title page, a frame and a standout frame](doc/img/styles.png)
 
-| style | font | primary | harmony | mode | forms |
+Every style sets its titles, subtitle and author in Open Sans and its text,
+mathematics and code in Computer Modern; the styles differ in the weight of
+the titles and in everything else.
+
+| style | titles | primary | harmony | mode | forms |
 |---|---|---|---|---|---|
-| `lamalunga` (default) | Open Sans, bold | `7A52C0` violet | complementary | light, tinted | boxed titles, bold alerts, golden squares, tinted blocks, spiral |
-| `bauhaus` | TeX Gyre Adventor (geometric), bold | `BE1E2D` red | triadic: red, yellow, blue | light, white | boxed titles and alerts, Bauhaus bullets, rule blocks |
-| `swiss` | TeX Gyre Heros (grotesque), bold | `D52B1E` red | monochromatic | light, white | bold alerts, rule blocks, narrow margins |
-| `nordic` | Source Sans (humanist), light | `4F6D7A` slate | analogous | paper | rounded corners, tinted blocks |
-| `classical` | EB Garamond, old-style figures | `7A1F2B` burgundy | complementary | paper | rule blocks, wide margins, spiral |
-| `japandi` | Source Sans, light | `6B705C` olive gray | monochromatic | paper | rounded corners, rule blocks, wide margins |
+| `lamalunga` (default) | ExtraBold | `7A52C0` violet | complementary | light, tinted | bold titles, bold alerts, arrows, tinted blocks, title and author in the foot line, spiral |
+| `bauhaus` | ExtraBold | `BE1E2D` red | triadic: red, yellow, blue | light, white | boxed titles and alerts, Bauhaus bullets, rule blocks |
+| `swiss` | ExtraBold | `D52B1E` red | monochromatic | light, white | bold alerts, rule blocks, narrow margins |
+| `nordic` | Light | `4F6D7A` slate | analogous | paper | rounded corners, tinted blocks |
+| `classical` | Light | `7A1F2B` burgundy | complementary | paper | rule blocks, wide margins, spiral |
+| `japandi` | Light | `6B705C` olive gray | monochromatic | paper | rounded corners, rule blocks, wide margins |
 
 ## Color
 
@@ -294,38 +301,36 @@ document is a power of the ratio as well:
 
 ## Typography
 
-### `font=opensans|plex|source|heros|adventor|garamond|libertinus|none`
+### `font=lamalunga|none`
 
-This is the family of the text, with IBM Plex Mono for code in all cases;
-large sizes use the light weight where the family has one. `none` keeps the fonts
-chosen by the document.
+The theme uses two families, the same in every style. Titles, frame titles,
+subtitle, author, section and standout pages are set in Open Sans, with its
+ExtraBold for titles and its SemiBold for subtitle and author; the text is set
+in Latin Modern Sans, the sans of Computer Modern, with Latin Modern Math for
+the mathematics (through `unicode-math` with LuaLaTeX and XeLaTeX) and Latin
+Modern Mono for code, all with their optical sizes. `none` leaves the fonts,
+and the mathematics, to the document; it is also the option to use in a
+document that relies on packages which do not work with `unicode-math`.
 
-![The six families](doc/img/fonts.png)
+![Open Sans for display text, Computer Modern for text and mathematics](doc/img/fonts.png)
 
 ### `weight=bold|light`
 
 The weight of display text (titles, frame titles, section and standout pages):
-bold by default, or the light weight of the family, which gives a quieter
-page.
+the ExtraBold of Open Sans by default, or its Light, which gives a quieter
+page; with `light` the words in a highlight are no longer set in bold.
 
 ![Bold and light display text](doc/img/weight.png)
 
-### `math=auto|fira|default`
-
-With LuaLaTeX or XeLaTeX, `auto` loads `unicode-math` with the mathematics of
-the family (Fira Math for the sans families, Garamond Math and Libertinus Math
-for the serif ones), `fira` forces Fira Math, and `default` leaves the
-mathematics of beamer untouched; one may want `default` in a document that
-relies on packages which do not work with `unicode-math`.
-
 ## Forms
 
-### `titles=boxed|plain` and `alerts=bold|color|boxed`
+### `titles=plain|boxed` and `alerts=bold|color|boxed`
 
-Without the spiral, the title page is centered horizontally (and stays at the
-golden section of the height). Boxed titles (the default) set the frame titles, the title and the section
-titles in a box of the primary, and a title broken with `\\` gets one box per
-line. Alerts are in the first accent and in bold by default, in the accent
+Plain titles (the default) are set in bold in the primary; boxed titles set
+the frame titles, the title and the section titles in a box of the primary,
+and a title broken with `\\` gets one box per line. Without the spiral, the
+title page is centered horizontally (and stays at the golden section of the
+height). Alerts are in the first accent and in bold by default, in the accent
 alone with `color`, or a highlight of the accent with `boxed`.
 
 ![Boxed and plain titles](doc/img/titles.png)
@@ -338,9 +343,12 @@ apply to tinted blocks, highlights and golden images.
 
 ![Tinted, rounded and rule blocks](doc/img/blocks.png)
 
-### `bullets=golden|bauhaus`
+### `bullets=arrows|golden|bauhaus`
 
-![Golden squares and Bauhaus bullets](doc/img/bullets.png)
+Arrows (the default), golden squares, or the Bauhaus shapes; in every case
+the size shrinks by φ at each level.
+
+![Arrows, golden squares and Bauhaus bullets](doc/img/bullets.png)
 
 ## Page furniture
 
@@ -348,8 +356,8 @@ apply to tinted blocks, highlights and golden images.
 |---|---|---|
 | `progressbar` | `frametitle`, `head`, `foot`, `none` | `frametitle` |
 | `numbering` | `fraction`, `counter`, `none` | `fraction` |
-| `footline` | `minimal`, `infolines` (three fields in the proportion 1 : φ : 1), `none` | `minimal` |
-| `headline` | `none`, `miniframes` (the navigation dots of the classic themes) | `none` |
+| `footline` | `credits` (the short title at the left, the author at the right), `none` (a free page, with its bottom margin), `running` (the short institute at the left, the frame number at the right), `minimal` (author and title at the left, the number at the right), `infolines` (three fields in the proportion 1 : φ : 1) | `credits` |
+| `headline` | `none`, `running` (the short title at the left, the author at the right, over a hairline), `miniframes` (the navigation dots of the classic themes) | `none` |
 | `sectionpage` | `progressbar`, `toc` (the outline at each section), `none` | `progressbar` |
 | `spiral` | `true`, `false` | `true` |
 | `guides` | `none`, `thirds`, `golden`, `both` | `none` |
@@ -424,9 +432,8 @@ make gallery    # rebuild the images of the README
 make install    # copy the .sty files to TEXMFHOME
 ```
 
-The fonts are the ones of TeX Live (Open Sans, IBM Plex, Source Sans, TeX
-Gyre, EB Garamond, Libertinus, Fira Math), and a full TeX Live installation
-needs no other font.
+The fonts are the ones of TeX Live (Open Sans, and Latin Modern with its
+mathematics), and a full TeX Live installation needs no other font.
 
 ## The name
 

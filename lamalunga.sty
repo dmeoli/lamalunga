@@ -407,6 +407,10 @@
 % one box per line of a title broken with \\
 \cs_new_protected:Npn \lamalunga_highlight_lines:nn #1 #2
   {
+    % a title keeps its own series: the font of the highlights is for words
+    % in the text
+    \group_begin:
+    \tl_set_eq:NN \g_lamalunga_highlight_font_tl \c_empty_tl
     \seq_set_split:Nnn \l__lamalunga_lines_seq { \\ } {#2}
     \seq_map_inline:Nn \l__lamalunga_lines_seq
       {
@@ -416,6 +420,7 @@
         \tl_trim_spaces:N \l__lamalunga_line_tl
         \__lamalunga_wrap:nV {#1} \l__lamalunga_line_tl
       }
+    \group_end:
   }
 \cs_generate_variant:Nn \lamalunga_highlight_lines:nn { nV }
 
