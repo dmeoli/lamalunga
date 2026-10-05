@@ -141,9 +141,10 @@ in parentheses describes the options that control it.
   rule of φ pt; the padding of a highlight is φ times wider than it is tall;
   corners are square or rounded with a radius of φ⁻³ em; images are cropped to
   a golden rectangle.
-- **The golden spiral.** On the title page, the golden rectangle of the page
-  is cut into its squares: the title sits in the first one, and the spiral
-  turns in the others.
+- **The golden section of the title page.** The title block is centered and
+  sits at the golden section of the height; with `spiral=true` the golden
+  rectangle of the page is cut into its squares, the title takes the first
+  one and the spiral is drawn in the others.
 - **Styles, as in interior design.** A single choice (`bauhaus`, `swiss`,
   `nordic`, `classical`, `japandi`) sets the weight of the titles, the
   primary, the harmony, the mode and the forms of a coherent idiom (the two
@@ -190,11 +191,11 @@ the titles and in everything else.
 
 | style | titles | primary | harmony | mode | forms |
 |---|---|---|---|---|---|
-| `lamalunga` (default) | ExtraBold | `7A52C0` violet | complementary | light, tinted | bold titles, bold alerts, arrows, tinted blocks, title and author in the foot line, spiral |
+| `lamalunga` (default) | ExtraBold | `7A52C0` violet | complementary | light, tinted | bold titles, bold alerts, arrows, tinted blocks, title and author in the foot line |
 | `bauhaus` | ExtraBold | `BE1E2D` red | triadic: red, yellow, blue | light, white | boxed titles and alerts, Bauhaus bullets, rule blocks |
 | `swiss` | ExtraBold | `D52B1E` red | monochromatic | light, white | bold alerts, rule blocks, narrow margins |
 | `nordic` | Light | `4F6D7A` slate | analogous | paper | rounded corners, tinted blocks |
-| `classical` | Light | `7A1F2B` burgundy | complementary | paper | rule blocks, wide margins, spiral |
+| `classical` | Light | `7A1F2B` burgundy | complementary | paper | rule blocks, wide margins |
 | `japandi` | Light | `6B705C` olive gray | monochromatic | paper | rounded corners, rule blocks, wide margins |
 
 ## Color
@@ -328,10 +329,11 @@ page; with `light` the words in a highlight are no longer set in bold.
 
 Plain titles (the default) are set in bold in the primary; boxed titles set
 the frame titles, the title and the section titles in a box of the primary,
-and a title broken with `\\` gets one box per line. Without the spiral, the
-title page is centered horizontally (and stays at the golden section of the
-height). Alerts are in the first accent and in bold by default, in the accent
-alone with `color`, or a highlight of the accent with `boxed`.
+and a title broken with `\\` gets one box per line. The title page is
+centered horizontally and stays at the golden section of the height (with
+`spiral=true` it keeps to the first square of the spiral instead). Alerts
+are in the first accent and in bold by default, in the accent alone with
+`color`, or a highlight of the accent with `boxed`.
 
 ![Boxed and plain titles](doc/img/titles.png)
 
@@ -359,7 +361,7 @@ the size shrinks by φ at each level.
 | `footline` | `credits` (the short title at the left, the author at the right), `none` (a free page, with its bottom margin), `running` (the short institute at the left, the frame number at the right), `minimal` (author and title at the left, the number at the right), `infolines` (three fields in the proportion 1 : φ : 1) | `credits` |
 | `headline` | `none`, `running` (the short title at the left, the author at the right, over a hairline), `miniframes` (the navigation dots of the classic themes) | `none` |
 | `sectionpage` | `progressbar`, `toc` (the outline at each section), `none` | `progressbar` |
-| `spiral` | `true`, `false` | `true` |
+| `spiral` | `false`, `true` | `false` |
 | `guides` | `none`, `thirds`, `golden`, `both` | `none` |
 
 Frames after `\appendix` are not counted in the total, and standout frames
@@ -367,7 +369,7 @@ are not numbered.
 
 ![Three arrangements of head and foot lines](doc/img/chrome.png)
 
-![The title page with and without the spiral](doc/img/spiral.png)
+![The title page without and with the spiral](doc/img/spiral.png)
 
 ![Composition guides and a focal point](doc/img/guides.png)
 

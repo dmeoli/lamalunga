@@ -89,7 +89,7 @@
 \cs_new:Npn \__lamalunga_mark:n #1
   { \prop_item:Nn \g__lamalunga_mark_prop {#1} }
 
-% without the spiral the title page is centred, with it the text keeps to
+% without the spiral the title page is centered, with it the text keeps to
 % the left of the first square
 \cs_new_protected:Npn \__lamalunga_title_align:
   { \bool_if:NTF \g_lamalunga_spiral_bool { \raggedright } { \centering } }
@@ -207,7 +207,7 @@
 \setbeamertemplate { title~page }
   {
     \bool_if:NT \g_lamalunga_spiral_bool { \lamalunga@titlespiral }
-    % the title block fills the first square of the spiral, or, centred,
+    % the title block fills the first square of the spiral, or, centered,
     % the whole text width when there is no spiral or more than four authors
     \bool_lazy_and:nnTF { \g_lamalunga_spiral_bool }
       { \int_compare_p:nNn { \seq_count:N \g__lamalunga_authors_seq } < { 5 } }
@@ -485,7 +485,7 @@
       }
   }
 % Arrows: triangles pointing right, in the color of the item, whose side
-% shrinks by phi at every level, centred on the x-height
+% shrinks by phi at every level, centered on the x-height
 \cs_new_protected:Npn \__lamalunga_arrow:n #1
   {
     \fp_set:Nn \l_tmpa_fp {#1}

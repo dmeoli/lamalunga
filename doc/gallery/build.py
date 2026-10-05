@@ -95,8 +95,8 @@ FIGURES = {
         ("aspect=beamer (16:9)", "aspect=beamer"),
     ]),
     "spiral": ("title", [
-        ("spiral=true", "spiral=true"),
         ("spiral=false", "spiral=false"),
+        ("spiral=true", "spiral=true"),
     ]),
     "guides": ("plain", [
         ("guides=both", "guides=both"),

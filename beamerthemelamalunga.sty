@@ -65,7 +65,7 @@
 \tl_gset:Nn \g_lamalunga_bullets_tl { arrows }
 \tl_gset:Nn \g_lamalunga_contrast_tl { AA }
 \tl_gset:Nn \g_lamalunga_style_tl { lamalunga }
-\bool_gset_true:N \g_lamalunga_spiral_bool
+\bool_gset_false:N \g_lamalunga_spiral_bool
 
 \cs_new_protected:Npn \__lamalunga_choice:nn #1 #2
   {
@@ -112,7 +112,7 @@
           primary = 7A52C0 , weight = bold , harmony = complementary ,
           mode = light , canvas = tinted , titles = plain , alerts = bold ,
           bullets = arrows , corners = square , blocks = tinted ,
-          margins = narrow , spiral = true
+          margins = narrow , spiral = false
         } ,
     style / bauhaus .code:n =
       \keys_set:nn { lamalunga }
@@ -144,7 +144,7 @@
           primary = 7A1F2B , weight = light , harmony = complementary ,
           mode = paper , canvas = tinted , titles = plain , alerts = color ,
           bullets = golden , corners = square , blocks = rule ,
-          margins = wide , spiral = true
+          margins = wide , spiral = false
         } ,
     style / japandi .code:n =
       \keys_set:nn { lamalunga }
