@@ -131,10 +131,13 @@
 \NewDocumentCommand \modularsize { m }
   {
     \fontsize { \modularscale {#1} pt }
-      { \fp_eval:n { round( \modularleading {#1} / \baselinestretch , 3 ) } pt }
+      { \fp_eval:n { round( \modularleading {#1} / \__lamalunga_stretch: , 3 ) } pt }
     \selectfont
     \__lamalunga_display_skips:
   }
+% \baselinestretch, or 1 where the format leaves it empty (outside beamer)
+\cs_new:Npn \__lamalunga_stretch:
+  { \tl_if_blank:oTF { \baselinestretch } { 1 } { \baselinestretch } }
 \cs_new_protected:Npn \__lamalunga_display_skips:
   {
     \skip_set:Nn \abovedisplayskip
